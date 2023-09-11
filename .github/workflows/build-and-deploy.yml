@@ -3,7 +3,7 @@ name: Build and Deploy Angular App
 on:
   push:
     branches:
-      - main # Change to your main branch name
+      - main
 
 jobs:
   build:
@@ -17,6 +17,9 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: 16
+
+    - name: Change to Angular App Directory
+      run: cd portfolio
 
     - name: Install Dependencies
       run: npm install
