@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Angular App
         run: |
-          cd ..
+          cd portfolio
           npm run build
 
       - name: Deploy to GitHub Pages
