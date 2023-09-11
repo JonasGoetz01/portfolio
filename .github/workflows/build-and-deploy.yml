@@ -26,10 +26,10 @@ jobs:
       - name: Build Angular App
         run: |
           cd portfolio
-          npm run build
+          ng build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_PAT }}
           publish_dir: ./portfolio/dist/portfolio
