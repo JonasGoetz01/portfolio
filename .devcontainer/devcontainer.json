@@ -18,7 +18,17 @@
 	"forwardPorts": [4200],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "cd portfolio && npm install"
+	"postCreateCommand": "cd portfolio && npm install",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"PKief.material-icon-theme",
+				"GitHub.github-vscode-theme",
+				"Angular.ng-template",
+				"Syler.sass-indented"
+			]
+		}
+	}
 
 	// Configure tool-specific properties.
 	// "customizations": {},
