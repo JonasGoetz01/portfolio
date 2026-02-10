@@ -3,7 +3,7 @@
 export default $config({
   app(input) {
     return {
-      name: "ultimate-nextjs-example",
+      name: "Portfolio Jonas Götz",
       removal: input?.stage === "production" ? "retain" : "remove",
       home: "aws",
       providers: {
