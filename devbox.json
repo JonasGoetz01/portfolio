@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
+  "packages": [
+    "atuin@latest",
+    "bun@latest",
+    "awscli2@latest",
+    "git@latest",
+    "gitmoji-cli@latest"
+  ]
+}
