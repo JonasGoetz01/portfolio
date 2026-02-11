@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   keywords: ["Jonas Götz", "Portfolio", "Software Engineer", "System Administrator"],
   authors: [{ name: "Jonas Götz", url: "https://goetz.sh" }],
   creator: "Jonas Götz"
+
 };
 
 export default function RootLayout({
