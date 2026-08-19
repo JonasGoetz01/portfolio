@@ -133,6 +133,28 @@ Docs: [tailwindcss.com/docs](https://tailwindcss.com/docs)
 
 ---
 
+## Site structure
+
+The site is the Personal Page design implemented with the App Router.
+
+- **Routes** — `/` (home), `/resume`, `/projects`, `/making`, `/blog`. Each sub-page is a
+  server component that exports metadata and renders a client `view.tsx`.
+- **Content** — all copy for both languages lives in `portfolio/lib/content.ts`. Nothing
+  else holds user-facing text, so adding an entry never means touching layout code.
+  `DEFAULT_LANG` there decides which language a first-time visitor sees.
+- **Language** — `portfolio/lib/language.tsx` keeps the choice in `localStorage` and shares
+  it through `useLanguage()`. The header toggles between EN and DE.
+- **Theme** — `next-themes` with the `class` attribute; it follows the system setting until
+  the visitor uses the header toggle.
+- **Design tokens** — `--bg`, `--surface`, `--line`, `--ink`, `--dim` and `--brand` are
+  defined in `portfolio/app/globals.css` and exposed to Tailwind as `bg-bg`, `border-line`,
+  `text-dim`, `text-brand` and so on. The shadcn tokens are untouched next to them.
+- **Images** — `ImageSlot` (`portfolio/app/_components/image-slot.tsx`) renders a labelled
+  placeholder until a picture exists. To fill one, drop the file into `portfolio/public/`
+  and set the `image` field on that project or making entry in `lib/content.ts`.
+
+---
+
 ## Image optimizer
 
 Convert images to AVIF for faster loading. From the `image-optimizer/` folder run:
