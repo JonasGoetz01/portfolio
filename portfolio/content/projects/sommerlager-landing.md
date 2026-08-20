@@ -2,11 +2,9 @@
 order: 3
 stack: [Next.js, TypeScript, i18n, SEO]
 
-# Put the files in assets/ at the repo root, then uncomment these.
-# hero: gh:projects/sommerlager-landing/hero.avif
-# images:
-#   - gh:projects/sommerlager-landing/registration.avif
-#   - { src: gh:projects/sommerlager-landing/status.avif, alt: The status page }
+hero:
+  src: gh:projects/website.avif
+  alt: The camp's public homepage, with the registration call to action
 
 kind: VOLUNTEER — SOMMERLAGER
 title: Sommerlager Landing Page

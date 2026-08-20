@@ -2,11 +2,9 @@
 order: 2
 stack: [Go, Fiber, PostgreSQL, Railway]
 
-# Put the files in assets/ at the repo root, then uncomment these.
-# hero: gh:projects/sommerlager-app/hero.avif
-# images:
-#   - gh:projects/sommerlager-app/rooms.avif
-#   - { src: gh:projects/sommerlager-app/dashboard.avif, alt: The camp dashboard }
+hero:
+  src: gh:projects/management.avif
+  alt: The Tagesplan view, laying out the daily schedule for a two-week camp
 
 kind: VOLUNTEER — SOMMERLAGER
 title: Sommerlager Management Application
@@ -43,6 +41,25 @@ anything falling through a gap:
 
 Every admin action lands in an audit log. With a rotating volunteer team, "who
 changed this and when" is a question that gets asked for real.
+
+## Running the fortnight itself
+
+Registrations are only the first week's problem. Once the camp starts, the same
+tool carries the operation:
+
+- **Tagesplan** — the daily schedule for all fifteen days, planned per day and
+  edited by clicking into it.
+- **Dienstplan and Aufgaben** — who is on duty when, and what still needs doing.
+- **Gruppen** and **Turniere** — the children split into groups, and the
+  tournaments those groups play.
+- **Zimmer** — the sleeping plan, alongside the assignment tool.
+- **Dokumente** — the paperwork a camp generates, edited in place through an
+  ONLYOFFICE document server rather than downloaded, changed and re-uploaded.
+- **Bank** — the money side, kept next to the registrations it belongs to.
+
+The screenshot above is the schedule for Sommerlager 2027, which is the honest
+measure of what this is for: the team plans a camp more than a year out, and the
+tool has to hold that plan without anyone maintaining a spreadsheet in parallel.
 
 ## Health data is handled separately
 
