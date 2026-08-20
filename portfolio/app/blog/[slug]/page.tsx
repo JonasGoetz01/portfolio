@@ -6,6 +6,9 @@ import { getPost, getPosts } from "@/lib/blog";
 
 type Params = { params: Promise<{ slug: string }> };
 
+/** Only the slugs in the content folder exist; anything else is a 404 at build time. */
+export const dynamicParams = false;
+
 /** One static page per file in content/blog/. */
 export function generateStaticParams() {
   return getPosts().map((post) => ({ slug: post.slug }));
@@ -15,7 +18,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return {};
-  return { title: `${post.title} — Jonas Götz`, description: post.excerpt };
+  return {
+    title: `${post.title} — Jonas Götz`,
+    description: post.excerpt,
+    alternates: { canonical: `/blog/${post.slug}` },
+  };
 }
 
 export default async function PostPage({ params }: Params) {

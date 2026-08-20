@@ -10,6 +10,7 @@
 
 import {
   readContentDir,
+  requireStr,
   str,
   toBlocks,
   toImage,
@@ -51,9 +52,9 @@ function isoDate(value: unknown): string {
  */
 export function getPosts(): Post[] {
   return readContentDir("blog")
-    .map(({ slug, data, body }) => {
+    .map(({ slug, source, data, body }) => {
       const date = isoDate(data.date);
-      const title = str(data, "title") || slug;
+      const title = requireStr(data, "title", source);
       const post: Post = {
         slug,
         date,

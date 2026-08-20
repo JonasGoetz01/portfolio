@@ -2,10 +2,10 @@
 
 Text that changes often lives in Markdown files here, one file per entry:
 
-| Folder | Shows up at | Docs |
-| --- | --- | --- |
+| Folder      | Shows up at                      | Docs                                     |
+| ----------- | -------------------------------- | ---------------------------------------- |
 | `projects/` | `/projects` + `/projects/<file>` | [projects/README.md](projects/README.md) |
-| `blog/` | `/blog` + `/blog/<file>` | [blog/README.md](blog/README.md) |
+| `blog/`     | `/blog` + `/blog/<file>`         | [blog/README.md](blog/README.md)         |
 
 Drop a `.md` file into either folder and it appears — no code changes. The
 filename is the URL. Files named `README.md`, or starting with `_` or `.`, are
@@ -33,9 +33,9 @@ the file.
 Three ways to point at a picture, in increasing order of convenience:
 
 ```yaml
-hero: /projects/my-thing/hero.avif                 # committed to portfolio/public/
-hero: https://raw.githubusercontent.com/…/x.avif   # any allowed remote URL
-hero: gh:projects/my-thing/hero.avif               # hosted on GitHub (recommended)
+hero: /projects/my-thing/hero.avif # committed to portfolio/public/
+hero: https://raw.githubusercontent.com/…/x.avif # any allowed remote URL
+hero: gh:projects/my-thing/hero.avif # hosted on GitHub (recommended)
 ```
 
 ### `gh:` — hosted on GitHub
@@ -52,7 +52,7 @@ prefer it:
 
 - **Pictures stay out of the deployed app.** `public/` is copied into the build;
   `assets/` is not, so large images do not grow the deploy.
-- **You can add one from the browser.** On GitHub: *Add file → Upload files* into
+- **You can add one from the browser.** On GitHub: _Add file → Upload files_ into
   `assets/…`, commit, done — no clone, no editor.
 
 The file has to be **pushed to `master`** before the URL resolves; until then the

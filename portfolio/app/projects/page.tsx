@@ -6,6 +6,7 @@ import { getProjects } from "@/lib/projects";
 
 export const metadata: Metadata = {
   title: `${content.projectsPage.title} — Jonas Götz`,
+  alternates: { canonical: "/projects" },
   description: content.projectsPage.intro,
 };
 

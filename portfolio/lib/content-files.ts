@@ -113,14 +113,29 @@ export function toBlocks(body: string, fallbackAlt: string, keyPrefix: string): 
     });
 }
 
-/** Read a string field from frontmatter, or "" when it is missing. */
+/** Read an optional string field from frontmatter, or "" when it is missing. */
 export function str(data: Record<string, unknown>, key: string): string {
   const value = data[key];
   return typeof value === "string" && value.trim() ? value.trim() : "";
 }
 
+/**
+ * Read a field that an entry cannot render without. Missing values throw during
+ * `next build` naming the file and the field, rather than shipping a card with a
+ * blank heading — a typo in frontmatter should fail the build, not the page.
+ */
+export function requireStr(data: Record<string, unknown>, key: string, source: string): string {
+  const value = str(data, key);
+  if (!value) {
+    throw new Error(`content/${source}: missing required frontmatter field "${key}"`);
+  }
+  return value;
+}
+
 export type ContentFile = {
   slug: string;
+  /** `folder/file.md`, used to name the file in error messages. */
+  source: string;
   data: Record<string, unknown>;
   /** The Markdown body, below the frontmatter. */
   body: string;
@@ -138,13 +153,44 @@ export function readContentDir(folder: string): ContentFile[] {
     .readdirSync(dir)
     .filter((file) => /\.mdx?$/.test(file) && !/^[_.]/.test(file) && !/^readme\./i.test(file))
     .map((file) => {
-      const { data, content: body } = matter(fs.readFileSync(path.join(dir, file), "utf8"));
-      const fm = data as Record<string, unknown>;
+      const source = `${folder}/${file}`;
+      let data: Record<string, unknown>;
+      let body: string;
+      try {
+        const parsed = matter(fs.readFileSync(path.join(dir, file), "utf8"));
+        data = parsed.data as Record<string, unknown>;
+        body = parsed.content;
+      } catch (cause) {
+        throw new Error(`content/${source}: could not parse frontmatter`, { cause });
+      }
+
       const fromName = file.replace(/\.mdx?$/, "");
-      return {
-        slug: typeof fm.slug === "string" && fm.slug.trim() ? fm.slug.trim() : fromName,
-        data: fm,
-        body,
-      };
-    });
+      const slug = str(data, "slug") || fromName;
+      if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
+        throw new Error(
+          `content/${source}: slug "${slug}" must be lowercase words separated by single hyphens`,
+        );
+      }
+
+      return { slug, source, data, body };
+    })
+    .map(assertUniqueSlug());
+}
+
+/**
+ * Two files resolving to the same slug would silently shadow each other in the
+ * routes, so the second one fails the build instead.
+ */
+function assertUniqueSlug() {
+  const seen = new Map<string, string>();
+  return (entry: ContentFile) => {
+    const clash = seen.get(entry.slug);
+    if (clash) {
+      throw new Error(
+        `content/${entry.source}: slug "${entry.slug}" is already used by content/${clash}`,
+      );
+    }
+    seen.set(entry.slug, entry.source);
+    return entry;
+  };
 }

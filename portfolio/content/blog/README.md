@@ -10,8 +10,8 @@ text, and how images work (including `gh:` GitHub hosting).
 
 ```markdown
 ---
-date: 2026-03-14                # ISO date; sorts newest first
-state: DRAFT                    # small brand-coloured tag; omit to hide
+date: 2026-03-14 # ISO date; sorts newest first
+state: DRAFT # small brand-coloured tag; omit to hide
 
 hero: gh:blog/homelab/hero.avif
 
@@ -28,17 +28,17 @@ Text after the picture.
 
 ## Fields
 
-| Field | Required | Notes |
-| --- | --- | --- |
-| `title` | yes | Falls back to the filename. |
-| `excerpt` | no | Shown on the list page and under the title. |
-| `date` | no | `YYYY-MM-DD`. Sorts newest first; also the date shown. |
-| `dateLabel` | no | Overrides what the date column shows, e.g. `Soon`. |
-| `state` | no | Small tag, e.g. `DRAFT`. Left out, nothing is shown. |
-| `hero` | no | The big picture at the top of the post. |
-| `images` | no | Gallery under the body. |
-| `order` | no | Overrides date sorting. Lower sorts first. |
-| `slug` | no | Overrides the filename as the URL. |
+| Field       | Required | Notes                                                  |
+| ----------- | -------- | ------------------------------------------------------ |
+| `title`     | yes      | Falls back to the filename.                            |
+| `excerpt`   | no       | Shown on the list page and under the title.            |
+| `date`      | no       | `YYYY-MM-DD`. Sorts newest first; also the date shown. |
+| `dateLabel` | no       | Overrides what the date column shows, e.g. `Soon`.     |
+| `state`     | no       | Small tag, e.g. `DRAFT`. Left out, nothing is shown.   |
+| `hero`      | no       | The big picture at the top of the post.                |
+| `images`    | no       | Gallery under the body.                                |
+| `order`     | no       | Overrides date sorting. Lower sorts first.             |
+| `slug`      | no       | Overrides the filename as the URL.                     |
 
 ## Ordering
 

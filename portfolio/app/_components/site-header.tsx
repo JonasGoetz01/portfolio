@@ -15,7 +15,7 @@ export default function SiteHeader() {
           jonas<span className="animate-blip text-brand">.</span>goetz
         </Link>
 
-        <nav className="flex w-full gap-5 sm:ml-auto sm:w-auto">
+        <nav aria-label="Main" className="flex w-full gap-5 sm:ml-auto sm:w-auto">
           {content.nav.map((item) => {
             const active = pathname === item.href;
             return (

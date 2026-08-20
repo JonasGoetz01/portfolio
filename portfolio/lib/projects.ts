@@ -10,6 +10,7 @@
 
 import {
   readContentDir,
+  requireStr,
   str,
   toBlocks,
   toImage,
@@ -39,8 +40,8 @@ export type Project = {
 /** Every project in `content/projects/`, in display order. */
 export function getProjects(): Project[] {
   return readContentDir("projects")
-    .map(({ slug, data, body }): Project => {
-      const title = str(data, "title") || slug;
+    .map(({ slug, source, data, body }): Project => {
+      const title = requireStr(data, "title", source);
       return {
         slug,
         order: typeof data.order === "number" ? data.order : Number.POSITIVE_INFINITY,
