@@ -10,7 +10,7 @@ export default function ProjectsView({ projects }: { projects: Project[] }) {
     <section className="animate-rise-fast pt-[72px]">
       <PageIntro title={content.projectsPage.title} intro={content.projectsPage.intro} />
       <div className="flex flex-col gap-7">
-        {projects.map((project) => (
+        {projects.map((project, index) => (
           <Link
             key={project.slug}
             href={`/projects/${project.slug}`}
@@ -21,6 +21,10 @@ export default function ProjectsView({ projects }: { projects: Project[] }) {
               hint={project.hero?.alt ?? project.title}
               className="h-[175px] w-full"
               sizes="(max-width: 640px) 100vw, 280px"
+              /* The first card is above the fold and is this page's Largest
+                 Contentful Paint, so it loads eagerly at high priority instead
+                 of waiting for the lazy-loading observer. */
+              priority={index === 0}
             />
             <div className="flex flex-col gap-[10px] py-1">
               <span className="font-mono text-[11px] tracking-[0.05em] text-brand">
