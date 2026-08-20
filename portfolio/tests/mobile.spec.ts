@@ -118,3 +118,31 @@ test("the portrait is cropped to the frame, never stretched", async ({ page }) =
     expect(shape.scaleX).toBeCloseTo(shape.scaleY, 5);
   }
 });
+
+/**
+ * The "now" cards are separated by 1px gaps that reveal the container's own
+ * background, which means an empty grid cell renders as a grey block. A partial
+ * row is therefore a visual bug, not just wasted space — so the column count
+ * must always divide the number of cards.
+ *
+ * The widths below span the range where `auto-fit` used to settle on two
+ * columns and leave three cards in a 2x2 with a hole.
+ */
+for (const width of [320, 375, 520, 560, 640, 700, 760, 820, 1024, 1280]) {
+  test(`the now grid has no empty cell at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    const grid = page.locator("section").nth(1).locator("div.grid");
+    const shape = await grid.evaluate((el) => ({
+      columns: getComputedStyle(el).gridTemplateColumns.split(" ").filter(Boolean).length,
+      cards: el.children.length,
+    }));
+
+    expect(shape.cards).toBeGreaterThan(0);
+    expect(
+      shape.cards % shape.columns,
+      `${shape.cards} cards in ${shape.columns} columns leaves a grey hole`,
+    ).toBe(0);
+  });
+}

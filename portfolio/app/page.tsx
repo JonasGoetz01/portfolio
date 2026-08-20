@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 
 import ImageSlot from "./_components/image-slot";
 import StackDiagram from "./_components/stack-diagram";
@@ -64,7 +65,17 @@ export default function Home() {
           <span className="font-mono text-xs tracking-[0.06em] text-dim">{content.nowLabel}</span>
           <span className="animate-sweep h-px flex-1" />
         </div>
-        <div className="grid gap-px overflow-hidden rounded-lg border border-line bg-line [grid-template-columns:repeat(auto-fit,minmax(230px,1fr))]">
+        {/*
+          The hairlines between cards are the container's own background showing
+          through 1px gaps, so an empty grid cell renders as a grey block. With
+          `auto-fit` that happened at any width fitting two columns: three items
+          became a 2x2 with a hole. Columns now follow the item count, so the row
+          is always exactly full, and below `md` the cards stack.
+        */}
+        <div
+          style={{ "--now-cols": content.now.length } as CSSProperties}
+          className="grid grid-cols-1 gap-px overflow-hidden rounded-lg border border-line bg-line md:[grid-template-columns:repeat(var(--now-cols),minmax(0,1fr))]"
+        >
           {content.now.map((item) => (
             <div key={item.tag} className="flex flex-col gap-2 bg-bg p-[22px]">
               <span className="font-mono text-[11px] tracking-[0.05em] text-brand">{item.tag}</span>
