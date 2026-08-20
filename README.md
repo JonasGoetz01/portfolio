@@ -166,8 +166,19 @@ The site is the Personal Page design implemented with the App Router.
 - **Headers** — `next.config.ts` sets a Content-Security-Policy plus HSTS, `nosniff`,
   `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy` and COOP, and disables the
   `X-Powered-By` header.
-- **SEO** — per-route canonical URLs, Open Graph and Twitter cards from `layout.tsx`, and
-  schema.org `Person` JSON-LD from `app/_components/structured-data.tsx`.
+- **Share previews** — every URL has its own Open Graph image. One template in
+  `app/_og/card.tsx` is rendered per route by an `opengraph-image.tsx`, so a link to a
+  project or a post previews with that entry's own title, subtitle and tags rather than a
+  generic site card. Twitter cards come from the same images.
+- **SEO** — per-route canonical URLs, `article` Open Graph metadata with publish dates on
+  posts, and schema.org JSON-LD from `app/_components/structured-data.tsx`: a `Person` graph
+  built from the résumé data (`hasOccupation`, `alumniOf`, `hasCredential`), plus
+  `BlogPosting` / `CreativeWork` and `BreadcrumbList` on detail pages.
+- **Feed** — `/blog/rss.xml`, generated from the same loader as the pages and linked from
+  the `<head>` of every page. The XML is built by `lib/feed.ts` so it can be unit tested.
+- **Icons and manifest** — `/icon`, `/apple-icon` and `/manifest.webmanifest` are generated
+  at build time, so there are no binary icons to keep in sync.
+- **`/.well-known/security.txt`** — RFC 9116, with an `Expires` one year from each build.
 
 ---
 

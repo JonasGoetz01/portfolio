@@ -1,18 +1,17 @@
-import { OG_CONTENT_TYPE, OG_SIZE, ogCard } from "./_og/card";
+import { OG_CONTENT_TYPE, OG_SIZE, ogCard } from "../_og/card";
 import { content } from "@/lib/content";
 
 export const dynamic = "force-static";
 export const runtime = "nodejs";
 
-export const alt = `${content.hero.name} — ${content.hero.eyebrow}`;
+export const alt = content.resume.title;
 export const size = OG_SIZE;
 export const contentType = OG_CONTENT_TYPE;
 
 export default function Image() {
   return ogCard({
-    eyebrow: content.hero.eyebrow,
-    title: content.hero.name,
+    eyebrow: "RÉSUMÉ",
+    title: content.resume.title,
     subtitle: content.meta.description,
-    portrait: true,
   });
 }

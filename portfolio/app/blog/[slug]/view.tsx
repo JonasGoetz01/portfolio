@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import ContentBlocks from "../../_components/content-blocks";
+import { PostStructuredData } from "../../_components/structured-data";
 import ImageSlot from "../../_components/image-slot";
 import { content } from "@/lib/content";
 import type { Post } from "@/lib/blog";
@@ -15,8 +16,21 @@ export default function PostView({ post }: { post: Post }) {
         ← {content.blogPage.back}
       </Link>
 
+      <PostStructuredData
+        title={post.title}
+        excerpt={post.excerpt}
+        slug={post.slug}
+        date={post.date}
+      />
+
       <div className="mb-[10px] flex flex-wrap items-center gap-3 font-mono text-[11px]">
-        <span className="text-dim">{post.dateLabel}</span>
+        {post.date ? (
+          <time dateTime={post.date} className="text-dim">
+            {post.dateLabel}
+          </time>
+        ) : (
+          <span className="text-dim">{post.dateLabel}</span>
+        )}
         {post.state && <span className="tracking-[0.05em] text-brand">{post.state}</span>}
       </div>
       <h1 className="mb-[10px] text-[40px] font-semibold leading-tight tracking-[-0.03em]">

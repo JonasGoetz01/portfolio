@@ -22,6 +22,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     title: `${project.title} — Jonas Götz`,
     description: project.subtitle,
     alternates: { canonical: `/projects/${project.slug}` },
+    openGraph: {
+      type: "article",
+      title: project.title,
+      description: project.subtitle,
+      url: `/projects/${project.slug}`,
+      authors: ["Jonas Götz"],
+      tags: project.stack,
+    },
   };
 }
 

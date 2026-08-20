@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import ContentBlocks from "../../_components/content-blocks";
+import { ProjectStructuredData } from "../../_components/structured-data";
 import ImageSlot from "../../_components/image-slot";
 import { content } from "@/lib/content";
 import type { Project } from "@/lib/projects";
@@ -8,6 +9,13 @@ import type { Project } from "@/lib/projects";
 export default function ProjectDetailView({ project }: { project: Project }) {
   return (
     <article className="animate-rise-fast pt-[72px]">
+      <ProjectStructuredData
+        title={project.title}
+        subtitle={project.subtitle}
+        slug={project.slug}
+        stack={project.stack}
+      />
+
       <Link
         href="/projects"
         className="mb-7 inline-block font-mono text-[12px] text-dim transition-colors hover:text-ink"

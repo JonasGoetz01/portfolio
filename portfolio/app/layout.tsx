@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 
 import "./globals.css";
 import Backdrop from "./_components/backdrop";
 import Contact from "./_components/contact";
 import SiteHeader from "./_components/site-header";
-import StructuredData from "./_components/structured-data";
+import { SiteStructuredData } from "./_components/structured-data";
 import { SITE_URL, content } from "@/lib/content";
 
 const spaceGrotesk = Space_Grotesk({
@@ -34,15 +34,44 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Jonas Götz", url: SITE_URL }],
   creator: "Jonas Götz",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: content.meta.title,
+    locale: "en",
+    url: SITE_URL,
+  },
+  robots: { index: true, follow: true },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
+      <head>
+        {/*
+          Declared here rather than through `metadata.alternates`, because a
+          child route setting its own `alternates` replaces the parent's and
+          would drop the feed link on every page but the home page.
+        */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title={`${content.blogPage.title} — ${content.hero.name}`}
+          href="/blog/rss.xml"
+        />
+        {/* Post and project pictures are served from GitHub; warm the connection. */}
+        <link rel="preconnect" href="https://raw.githubusercontent.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
+      </head>
       <body
         className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} min-h-screen bg-bg font-sans text-ink antialiased`}
       >
-        <StructuredData />
+        <SiteStructuredData />
         <a
           href="#content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-brand focus:px-4 focus:py-2 focus:font-mono focus:text-[12.5px] focus:text-bg"
