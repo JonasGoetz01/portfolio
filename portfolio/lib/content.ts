@@ -27,8 +27,6 @@ export type StackLayer = { n: string; title: string; note: string };
 
 export type NowItem = { tag: string; text: string };
 
-export type Card = { href: string; title: string; sub: string };
-
 export type SiteContent = {
   meta: { title: string; description: string };
   nav: NavItem[];
@@ -43,7 +41,6 @@ export type SiteContent = {
   stackTitle: string;
   stackIntro: string;
   stack: StackLayer[];
-  cards: Card[];
   resume: {
     title: string;
     experience: string;
@@ -75,6 +72,49 @@ export type SiteContent = {
   };
   contact: { title: string; intro: string };
   footer: string;
+  /**
+   * Legal notice required of German sites by §5 DDG. Deliberately in German:
+   * it exists to satisfy German law, and that is the language it is read in.
+   */
+  impressum: {
+    title: string;
+    /** §5 DDG — "Angaben gemäß §5 DDG". */
+    providerLabel: string;
+    name: string;
+    /** Street and number. Empty until filled in — see the note in the object. */
+    street: string;
+    /** Postcode and city. */
+    city: string;
+    country: string;
+    contactLabel: string;
+    /** §18 Abs. 2 MStV — required once a site carries editorial content. */
+    responsibleLabel: string;
+    liabilityTitle: string;
+    liabilityContent: string;
+    liabilityLinksTitle: string;
+    liabilityLinks: string;
+    copyrightTitle: string;
+    copyright: string;
+  };
+  /**
+   * Privacy notice under Art. 13 GDPR. German for the same reason as the
+   * Impressum. The text describes what this site actually does — no cookies, no
+   * analytics, no third-party requests — so it must be revisited if that
+   * changes.
+   */
+  privacy: {
+    title: string;
+    intro: string;
+    /** Who is responsible, per Art. 4 No. 7 GDPR. */
+    controllerTitle: string;
+    /** Named so the section can point at the hosting provider. */
+    host: string;
+    sections: { title: string; body: string[] }[];
+    rightsTitle: string;
+    rightsIntro: string;
+    rights: string[];
+    rightsOutro: string;
+  };
 };
 
 /**
@@ -133,19 +173,6 @@ export const content: SiteContent = {
     },
     { n: "03", title: "Software & systems", note: "Go, Python, Next.js" },
     { n: "04", title: "People", note: "Leading IT, leading youth groups" },
-  ],
-  cards: [
-    {
-      href: "/resume",
-      title: "Resume",
-      sub: "Seven years, four places, one detour.",
-    },
-    {
-      href: "/projects",
-      title: "Projects",
-      sub: "Learning Hub and two summer camp projects.",
-    },
-    { href: "/blog", title: "Blog", sub: "Notes — still in progress." },
   ],
   resume: {
     title: "Resume",
@@ -302,4 +329,107 @@ export const content: SiteContent = {
     intro: "For ideas, questions or suggestions.",
   },
   footer: "© 2026 Jonas Götz — Heilbronn, Germany",
+
+  impressum: {
+    title: "Impressum",
+    providerLabel: "Angaben gemäß § 5 DDG",
+    name: "Jonas Götz",
+
+    // TODO: §5 DDG requires a postal address at which the provider can be
+    // reached — a PO box is not enough. Until these two lines hold a real
+    // address the page is incomplete, and `lib/content.test.ts` fails to say so.
+    street: "",
+    city: "",
+    country: "Deutschland",
+
+    contactLabel: "Kontakt",
+    responsibleLabel: "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV",
+
+    liabilityTitle: "Haftung für Inhalte",
+    liabilityContent:
+      "Als Diensteanbieter bin ich gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten verantwortlich. Nach §§ 8 bis 10 DDG bin ich als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werde ich diese Inhalte unverzüglich entfernen.",
+
+    liabilityLinksTitle: "Haftung für Links",
+    liabilityLinks:
+      "Dieses Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte ich keinen Einfluss habe. Deshalb kann ich für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werde ich derartige Links unverzüglich entfernen.",
+
+    copyrightTitle: "Urheberrecht",
+    copyright:
+      "Die durch den Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Der Quellcode dieser Seite ist auf GitHub öffentlich einsehbar.",
+  },
+
+  privacy: {
+    title: "Datenschutzerklärung",
+    intro:
+      "Diese Website ist eine private Seite ohne Analyse-Werkzeuge, ohne Werbung und ohne Cookies. Sie setzt keine Tracker, bindet keine Inhalte Dritter nach und legt keine Daten im Browser ab. Verarbeitet werden allein die Daten, die beim Abruf einer Seite technisch anfallen. Die folgenden Angaben erfüllen die Informationspflicht nach Art. 13 DSGVO.",
+
+    controllerTitle: "Verantwortlicher",
+    host: "Railway",
+
+    sections: [
+      {
+        title: "Server-Logfiles",
+        body: [
+          "Beim Abruf dieser Website übermittelt Ihr Browser technisch notwendige Daten, die der Hosting-Anbieter in Logfiles erfasst: die IP-Adresse, Datum und Uhrzeit des Zugriffs, die aufgerufene Adresse, den HTTP-Statuscode, die übertragene Datenmenge, den zuvor besuchten Verweis (Referrer) sowie Browser- und Betriebssystemkennung.",
+          "Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Das berechtigte Interesse liegt im technischen Betrieb, in der Stabilität und in der Absicherung der Website gegen Missbrauch. Diese Daten werden nicht mit anderen Datenquellen zusammengeführt und nicht zur Bildung von Nutzungsprofilen verwendet. Eine Auswertung findet nur anlassbezogen statt, etwa zur Aufklärung einer Störung oder eines Angriffs.",
+        ],
+      },
+      {
+        title: "Hosting",
+        body: [
+          "Die Website wird bei Railway betrieben. Der Anbieter verarbeitet die oben genannten Logdaten als Auftragsverarbeiter ausschließlich zum Zweck der Bereitstellung der Website und ist hierbei an Weisungen gebunden. Der Anbieter hat seinen Sitz in den Vereinigten Staaten; eine Verarbeitung außerhalb der Europäischen Union ist daher nicht ausgeschlossen.",
+        ],
+      },
+      {
+        title: "Keine Cookies, keine Reichweitenmessung",
+        body: [
+          "Diese Website setzt keine Cookies und nutzt weder Local Storage noch Session Storage. Es sind keine Analyse-, Statistik- oder Werbedienste eingebunden, es findet keine Reichweitenmessung statt, und es werden keine Daten an Dritte zu Analysezwecken übermittelt. Ein Einwilligungsbanner ist deshalb nicht erforderlich.",
+        ],
+      },
+      {
+        title: "Schriften und Bilder",
+        body: [
+          "Alle Schriftarten werden von diesem Server ausgeliefert. Es besteht beim Seitenabruf keine Verbindung zu Google Fonts oder einem anderen externen Schriftdienst.",
+          "Bilder werden ebenfalls ausschließlich von diesem Server ausgeliefert. Soweit Bilddateien in einem externen Repository liegen, werden sie serverseitig abgerufen und zwischengespeichert — Ihr Browser stellt keine Verbindung zu Dritten her, und Ihre IP-Adresse wird dorthin nicht übertragen.",
+        ],
+      },
+      {
+        title: "Kontaktaufnahme",
+        body: [
+          "Diese Website enthält kein Kontaktformular. Wenn Sie die angegebene E-Mail-Adresse nutzen, werden die von Ihnen übermittelten Daten zur Bearbeitung Ihrer Anfrage verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO, bei Anfragen zu einem Vertragsverhältnis Art. 6 Abs. 1 lit. b DSGVO. Ihre Nachricht wird gelöscht, sobald sie nicht mehr benötigt wird und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.",
+        ],
+      },
+      {
+        title: "Externe Links",
+        body: [
+          "Auf dieser Website befinden sich Links zu externen Diensten, etwa GitHub und LinkedIn. Diese werden erst aufgerufen, wenn Sie den jeweiligen Link anklicken. Vorher werden keine Daten an diese Anbieter übermittelt. Für die Verarbeitung nach dem Klick ist der jeweilige Anbieter verantwortlich.",
+        ],
+      },
+      {
+        title: "Verschlüsselung",
+        body: [
+          "Diese Website wird ausschließlich über HTTPS ausgeliefert. Die Verbindung zwischen Ihrem Browser und dem Server ist damit verschlüsselt und der Inhalt für Dritte nicht mitlesbar.",
+        ],
+      },
+      {
+        title: "Keine automatisierte Entscheidungsfindung",
+        body: [
+          "Es findet keine automatisierte Entscheidungsfindung einschließlich Profiling nach Art. 22 DSGVO statt.",
+        ],
+      },
+    ],
+
+    rightsTitle: "Ihre Rechte",
+    rightsIntro: "Sie haben im Rahmen der gesetzlichen Voraussetzungen das Recht auf",
+    rights: [
+      "Auskunft über die zu Ihrer Person verarbeiteten Daten (Art. 15 DSGVO)",
+      "Berichtigung unrichtiger Daten (Art. 16 DSGVO)",
+      "Löschung (Art. 17 DSGVO)",
+      "Einschränkung der Verarbeitung (Art. 18 DSGVO)",
+      "Datenübertragbarkeit (Art. 20 DSGVO)",
+      "Widerspruch gegen eine Verarbeitung auf Grundlage berechtigter Interessen (Art. 21 DSGVO)",
+    ],
+    rightsOutro:
+      "Für die Ausübung dieser Rechte genügt eine Nachricht an die oben genannte E-Mail-Adresse. Unabhängig davon steht Ihnen ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde zu, insbesondere bei der Behörde Ihres gewöhnlichen Aufenthaltsorts oder der für den Verantwortlichen zuständigen Stelle.",
+  },
 };

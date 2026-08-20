@@ -9,5 +9,7 @@ export const ROUTES = [
   "/projects/learning-hub",
   "/blog",
   "/blog/lms-without-teachers",
+  "/impressum",
+  "/datenschutz",
   "/does-not-exist", // the 404 page is a page too
 ] as const;

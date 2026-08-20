@@ -64,9 +64,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           title={`${content.blogPage.title} — ${content.hero.name}`}
           href="/blog/rss.xml"
         />
-        {/* Post and project pictures are served from GitHub; warm the connection. */}
-        <link rel="preconnect" href="https://raw.githubusercontent.com" crossOrigin="" />
-        <link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
       </head>
       <body
         className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} min-h-screen bg-bg font-sans text-ink antialiased`}

@@ -39,6 +39,24 @@ function langOf(lang: string | undefined): string {
   return (lang || "text").trim().split(/\s+/)[0] || "text";
 }
 
+/**
+ * Widths Next's optimiser accepts by default. 828 is the largest that fits the
+ * prose column, so inline pictures ask for exactly that.
+ */
+const INLINE_IMAGE_WIDTH = 828;
+
+/**
+ * Send a remote picture through `/_next/image` rather than linking it directly.
+ * A direct link would make the visitor's browser fetch from GitHub, handing a
+ * third party their IP address on every page view; the optimiser fetches it
+ * server-side and serves it from this origin. Local paths are already
+ * same-origin and are left alone.
+ */
+function sameOriginSrc(src: string): string {
+  if (!/^https?:\/\//i.test(src)) return src;
+  return `/_next/image?url=${encodeURIComponent(src)}&w=${INLINE_IMAGE_WIDTH}&q=75`;
+}
+
 /** A paragraph that holds nothing but one image, ignoring surrounding space. */
 function loneImage(token: Token): Tokens.Image | undefined {
   if (token.type !== "paragraph") return undefined;
@@ -117,9 +135,10 @@ function buildRenderer(highlighted: Map<string, string>) {
       },
 
       image({ href, title, text }) {
-        // Inline images (inside a sentence) still go through gh: resolution.
+        // Inline images (inside a sentence). Standalone ones never reach here —
+        // they are split out and rendered by next/image.
         const attrs = [
-          `src="${resolveSrc(href)}"`,
+          `src="${sameOriginSrc(resolveSrc(href))}"`,
           `alt="${text}"`,
           title ? `title="${title}"` : "",
         ]

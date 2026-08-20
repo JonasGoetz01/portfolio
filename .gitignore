@@ -1,2 +1,4 @@
 .devbox
 .env
+test-results
+playwright-report

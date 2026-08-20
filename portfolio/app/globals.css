@@ -53,6 +53,25 @@
 }
 
 /* -------------------------------------------------------------------------- */
+/*  Image framing                                                             */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * Zoom on top of the cover crop, set by ImageSlot through custom properties so
+ * a picture can be framed differently on a wide phone slot than on a narrow
+ * desktop one. `--img-scale-sm` falls back to `--img-scale` when unset.
+ */
+.img-zoom {
+  transform: scale(var(--img-scale, 1));
+}
+
+@media (width >= 40rem) {
+  .img-zoom {
+    transform: scale(var(--img-scale-sm, var(--img-scale, 1)));
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Prose — rendered Markdown bodies on project and post pages                */
 /* -------------------------------------------------------------------------- */
 
@@ -355,16 +374,6 @@
     transform: none;
   }
 }
-@keyframes blip {
-  0%,
-  60%,
-  100% {
-    opacity: 1;
-  }
-  30% {
-    opacity: 0.25;
-  }
-}
 @keyframes tiltStack {
   0% {
     transform: rotateX(58deg) rotateZ(-38deg);
@@ -433,9 +442,6 @@
 }
 .animate-rise-fast {
   animation: rise 0.4s ease both;
-}
-.animate-blip {
-  animation: blip 3.4s ease-in-out infinite;
 }
 .animate-caret {
   animation: caret 1.1s step-end infinite;
