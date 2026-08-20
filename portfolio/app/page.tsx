@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { CSSProperties } from "react";
 
 import ImageSlot from "./_components/image-slot";
@@ -111,22 +110,6 @@ export default function Home() {
               ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* --------------------------------- Cards --------------------------------- */}
-      <section className="pt-14">
-        <div className="grid gap-[14px] [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]">
-          {content.cards.map((card) => (
-            <Link
-              key={card.href}
-              href={card.href}
-              className="flex flex-col gap-[6px] rounded-lg border border-line bg-surface p-5 text-left transition-colors hover:border-brand"
-            >
-              <span className="text-base font-semibold tracking-[-0.01em]">{card.title}</span>
-              <span className="text-[13.5px] leading-[1.5] text-dim">{card.sub}</span>
-            </Link>
-          ))}
         </div>
       </section>
     </>

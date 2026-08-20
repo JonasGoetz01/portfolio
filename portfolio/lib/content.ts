@@ -27,8 +27,6 @@ export type StackLayer = { n: string; title: string; note: string };
 
 export type NowItem = { tag: string; text: string };
 
-export type Card = { href: string; title: string; sub: string };
-
 export type SiteContent = {
   meta: { title: string; description: string };
   nav: NavItem[];
@@ -43,7 +41,6 @@ export type SiteContent = {
   stackTitle: string;
   stackIntro: string;
   stack: StackLayer[];
-  cards: Card[];
   resume: {
     title: string;
     experience: string;
@@ -176,19 +173,6 @@ export const content: SiteContent = {
     },
     { n: "03", title: "Software & systems", note: "Go, Python, Next.js" },
     { n: "04", title: "People", note: "Leading IT, leading youth groups" },
-  ],
-  cards: [
-    {
-      href: "/resume",
-      title: "Resume",
-      sub: "Seven years, four places, one detour.",
-    },
-    {
-      href: "/projects",
-      title: "Projects",
-      sub: "Learning Hub and two summer camp projects.",
-    },
-    { href: "/blog", title: "Blog", sub: "Notes — still in progress." },
   ],
   resume: {
     title: "Resume",
