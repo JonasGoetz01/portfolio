@@ -1,6 +1,6 @@
 # Portfolio
 
-Personal portfolio site (Next.js, Tailwind, shadcn/ui), deployed with SST on AWS.
+Personal portfolio site (Next.js, Tailwind, shadcn/ui), deployed on Railway with Railpack.
 
 ---
 
@@ -51,59 +51,39 @@ You don’t run `devbox shell` or `nvm use` manually. Enter the repo → direnv 
 
 ---
 
-## SST & OpenNext
+## Railway & Railpack
 
-- **[SST](https://sst.dev)** — Framework to build and deploy serverless apps (and more) on AWS (and other clouds). You define resources in TypeScript (`sst.config.ts`); SST turns your Next.js app into Lambda + CloudFront (or similar) and manages infra.
-- **[OpenNext](https://opennext.js.org)** — Adapter that makes Next.js run on AWS (Lambda@Edge / Lambda + CloudFront). SST’s `sst.aws.Nextjs` uses OpenNext under the hood so the app runs serverlessly without changing your Next.js code.
+- **[Railway](https://railway.com)** — Hosting platform. It watches the repo,
+  builds on push, and runs the app as a long-lived service with a managed domain
+  and TLS.
+- **[Railpack](https://railpack.com)** — Railway's builder. It inspects the repo,
+  detects Bun and Next.js, and produces the image — no Dockerfile to maintain.
 
-Docs: [sst.dev/docs](https://sst.dev/docs), [opennext.js.org](https://opennext.js.org)
+Because the app runs as a normal Node server (rather than as functions behind a
+CDN), everything in Next works without adapters: the image optimizer, ISR, and
+route handlers all behave as they do locally.
 
-### Using `sst dev`
+### Deploying
 
-Runs your app in “dev” mode: local Next.js dev server (e.g. `bun run dev`) plus SST’s dev pipeline (hot reload, live Lambda preview, etc., depending on config).
+Push to `master` and Railway builds and releases. Watch the build in the Railway
+dashboard; a failed build leaves the previous release running.
 
-From the **repo root** (where `sst.config.ts` lives):
+**Settings that matter**, since the Next app lives in a subfolder:
 
-```bash
-sst dev
-```
+- **Root directory** — `portfolio`
+- **Build** — `bun run build` (Railpack detects this)
+- **Start** — `bun run start`
+- **`PORT`** — injected by Railway; `next start` reads it automatically.
 
-With Devbox + direnv, the right `bun` and tools are already in your path. The config’s `dev.autostart` and `dev.command` control how the Next app is started.
+### Running it locally
 
-### Deploying with SST
-
-From the **repo root**:
-
-```bash
-sst deploy
-```
-
-Or with a stage (e.g. `staging`):
-
-```bash
-sst deploy --stage staging
-```
-
-Ensure AWS (and Cloudflare, if used for DNS) credentials are configured (e.g. `aws configure` or env vars). SST will build the Next app and deploy the Lambda/CloudFront (and other) resources defined in `sst.config.ts`.
-
-### Deploy pipeline (tag-only)
-
-Deploys run via **GitHub Actions** when you **push a version tag** (e.g. `v1.0.0`). The workflow is in `.github/workflows/deploy.yml`.
-
-**To deploy:**
+From `portfolio/`:
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+bun run dev      # dev server on :3000
+bun run build    # production build, same as CI
+bun run start    # serve the production build
 ```
-
-The workflow runs `sst deploy --stage production`. Only tag pushes trigger it; normal pushes to `main` do not deploy.
-
-**Secrets/variables (Settings → Secrets and variables → Actions):**
-
-- **AWS:** Add secrets `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
-- **Optional variable:** `AWS_REGION` (default in workflow: `eu-central-1`).
-- **Cloudflare (for DNS):** Add secret `CLOUDFLARE_API_TOKEN` (create token in Cloudflare dashboard with Zone DNS edit).
 
 ---
 
@@ -120,8 +100,8 @@ The workflow runs `sst deploy --stage production`. Only tag pushes trigger it; n
 
 - **App Router:** Routes and layouts live under `portfolio/app/` (`page.tsx`, `layout.tsx`, etc.).
 - **Server vs client:** By default components are Server Components; add `"use client"` when you need hooks, browser APIs, or client interactivity.
-- **Run dev:** From repo root with SST use `sst dev`; or from `portfolio/` run `bun run dev` for a plain Next dev server.
-- **Build:** `bun run build` in `portfolio/` (or via SST deploy).
+- **Run dev:** From `portfolio/` run `bun run dev`.
+- **Build:** `bun run build` in `portfolio/` — the same command Railway runs.
 
 Docs: [nextjs.org/docs](https://nextjs.org/docs)
 
@@ -137,21 +117,28 @@ Docs: [tailwindcss.com/docs](https://tailwindcss.com/docs)
 
 The site is the Personal Page design implemented with the App Router.
 
-- **Routes** — `/` (home), `/resume`, `/projects`, `/making`, `/blog`. Each sub-page is a
-  server component that exports metadata and renders a client `view.tsx`.
-- **Content** — all copy for both languages lives in `portfolio/lib/content.ts`. Nothing
-  else holds user-facing text, so adding an entry never means touching layout code.
-  `DEFAULT_LANG` there decides which language a first-time visitor sees.
-- **Language** — `portfolio/lib/language.tsx` keeps the choice in `localStorage` and shares
-  it through `useLanguage()`. The header toggles between EN and DE.
-- **Theme** — `next-themes` with the `class` attribute; it follows the system setting until
-  the visitor uses the header toggle.
+- **Routes** — `/` (home), `/resume`, `/projects`, `/blog`, plus a page per entry at
+  `/projects/<slug>` and `/blog/<slug>`. Each sub-page is a server component that exports
+  metadata and renders a client `view.tsx`.
+- **Content** — projects and blog posts are Markdown files, one per entry, in
+  `portfolio/content/projects/` and `portfolio/content/blog/`. Dropping a file in either
+  folder adds an entry and its own page; see `portfolio/content/README.md` for the format.
+  The remaining copy — navigation, résumé, page intros — lives in `portfolio/lib/content.ts`.
+  The site is English only.
+- **Server components** — only the header (active-link highlight) and the contact form need
+  the client. Every page and view is a server component.
+- **Theme** — light only. `color-scheme: light` is pinned in `globals.css`, and the `dark:`
+  variant stays scoped to a `.dark` ancestor that nothing sets, so a visitor whose OS
+  prefers dark still gets the light design.
 - **Design tokens** — `--bg`, `--surface`, `--line`, `--ink`, `--dim` and `--brand` are
   defined in `portfolio/app/globals.css` and exposed to Tailwind as `bg-bg`, `border-line`,
   `text-dim`, `text-brand` and so on. The shadcn tokens are untouched next to them.
 - **Images** — `ImageSlot` (`portfolio/app/_components/image-slot.tsx`) renders a labelled
-  placeholder until a picture exists. To fill one, drop the file into `portfolio/public/`
-  and set the `image` field on that project or making entry in `lib/content.ts`.
+  placeholder until a picture exists, so a page is never broken while pictures are still
+  missing. Project and post pictures are best kept in `assets/` at the repo root and
+  referenced as `gh:<path>`, which serves them from GitHub instead of shipping them in the
+  deploy — see `assets/README.md`. Files in `portfolio/public/` and plain remote URLs work
+  too; `images.remotePatterns` in `portfolio/next.config.ts` lists the hosts allowed.
 
 ---
 

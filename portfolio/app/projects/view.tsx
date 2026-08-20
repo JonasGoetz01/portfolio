@@ -1,24 +1,24 @@
-"use client";
+import Link from "next/link";
 
 import ImageSlot from "../_components/image-slot";
 import PageIntro from "../_components/page-intro";
-import { useLanguage } from "@/lib/language";
+import { content } from "@/lib/content";
+import type { Project } from "@/lib/projects";
 
-export default function ProjectsView() {
-  const { t } = useLanguage();
-
+export default function ProjectsView({ projects }: { projects: Project[] }) {
   return (
     <section className="animate-rise-fast pt-[72px]">
-      <PageIntro title={t.projectsPage.title} intro={t.projectsPage.intro} />
+      <PageIntro title={content.projectsPage.title} intro={content.projectsPage.intro} />
       <div className="flex flex-col gap-7">
-        {t.projects.map((project) => (
-          <article
-            key={project.slot}
-            className="grid items-start gap-7 rounded-[10px] border border-line bg-surface p-5 sm:[grid-template-columns:280px_1fr]"
+        {projects.map((project) => (
+          <Link
+            key={project.slug}
+            href={`/projects/${project.slug}`}
+            className="grid items-start gap-7 rounded-[10px] border border-line bg-surface p-5 transition-colors hover:border-brand sm:[grid-template-columns:280px_1fr]"
           >
             <ImageSlot
-              src={project.image}
-              hint={project.slotHint}
+              src={project.hero?.src}
+              hint={project.hero?.alt ?? project.title}
               className="h-[175px] w-full"
               sizes="(max-width: 640px) 100vw, 280px"
             />
@@ -27,7 +27,7 @@ export default function ProjectsView() {
                 {project.kind}
               </span>
               <h2 className="text-[22px] font-semibold tracking-[-0.02em]">{project.title}</h2>
-              <p className="text-[15px] leading-relaxed text-pretty">{project.desc}</p>
+              <p className="text-[15px] leading-relaxed text-pretty">{project.subtitle}</p>
               <div className="mt-1 flex flex-wrap gap-[6px]">
                 {project.stack.map((item) => (
                   <span
@@ -39,7 +39,7 @@ export default function ProjectsView() {
                 ))}
               </div>
             </div>
-          </article>
+          </Link>
         ))}
       </div>
     </section>

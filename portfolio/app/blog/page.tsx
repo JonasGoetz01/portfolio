@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
 
 import BlogView from "./view";
-import { content, DEFAULT_LANG } from "@/lib/content";
+import { content } from "@/lib/content";
+import { getPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
-  title: `${content[DEFAULT_LANG].blogPage.title} — Jonas Götz`,
-  description: content[DEFAULT_LANG].blogPage.intro,
+  title: `${content.blogPage.title} — Jonas Götz`,
+  description: content.blogPage.intro,
 };
 
 export default function BlogPage() {
-  return <BlogView />;
+  return <BlogView posts={getPosts()} />;
 }
