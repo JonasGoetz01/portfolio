@@ -1,11 +1,15 @@
-/** The shared title + lead paragraph that opens every sub-page. */
-export default function PageIntro({ title, intro }: { title: string; intro: string }) {
+/** The shared title + optional lead paragraph that opens every sub-page. */
+export default function PageIntro({ title, intro }: { title: string; intro?: string }) {
   return (
     <>
-      <h1 className="mb-[10px] text-[40px] font-semibold leading-tight tracking-[-0.03em]">
+      <h1
+        className={`text-[40px] font-semibold leading-tight tracking-[-0.03em] ${
+          intro ? "mb-[10px]" : "mb-11"
+        }`}
+      >
         {title}
       </h1>
-      <p className="mb-11 max-w-[52ch] text-base leading-relaxed text-dim">{intro}</p>
+      {intro && <p className="mb-11 max-w-[52ch] text-base leading-relaxed text-dim">{intro}</p>}
     </>
   );
 }

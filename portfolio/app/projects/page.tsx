@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
 
 import ProjectsView from "./view";
-import { content, DEFAULT_LANG } from "@/lib/content";
+import { content } from "@/lib/content";
+import { getProjects } from "@/lib/projects";
 
 export const metadata: Metadata = {
-  title: `${content[DEFAULT_LANG].projectsPage.title} — Jonas Götz`,
-  description: content[DEFAULT_LANG].projectsPage.intro,
+  title: `${content.projectsPage.title} — Jonas Götz`,
+  description: content.projectsPage.intro,
 };
 
 export default function ProjectsPage() {
-  return <ProjectsView />;
+  // Read on the server, render in the client view — the language toggle needs
+  // both languages in the browser.
+  return <ProjectsView projects={getProjects()} />;
 }

@@ -1,15 +1,10 @@
-"use client";
-
 import Link from "next/link";
 
 import ImageSlot from "./_components/image-slot";
 import StackDiagram from "./_components/stack-diagram";
-import { PORTRAIT } from "@/lib/content";
-import { useLanguage } from "@/lib/language";
+import { content, PORTRAIT } from "@/lib/content";
 
 export default function Home() {
-  const { t } = useLanguage();
-
   return (
     <>
       {/* ---------------------------------- Hero --------------------------------- */}
@@ -18,23 +13,23 @@ export default function Home() {
           <div className="flex flex-1 basis-[340px] flex-col gap-[22px]">
             <div className="flex flex-col gap-[10px]">
               <span className="font-mono text-xs tracking-[0.06em] text-brand">
-                {t.hero.eyebrow}
+                {content.hero.eyebrow}
                 <span className="animate-caret ml-[3px] inline-block">_</span>
               </span>
               <h1 className="text-[clamp(40px,9vw,56px)] font-semibold leading-[1.02] tracking-[-0.03em]">
-                {t.hero.name}
+                {content.hero.name}
               </h1>
             </div>
             <div className="flex max-w-[46ch] flex-col gap-4">
-              <p className="text-[17px] leading-[1.65] text-pretty">{t.hero.paragraphs[0]}</p>
+              <p className="text-[17px] leading-[1.65] text-pretty">{content.hero.paragraphs[0]}</p>
               <p className="text-[17px] leading-[1.65] text-dim text-pretty">
-                {t.hero.paragraphs[1]}
+                {content.hero.paragraphs[1]}
               </p>
             </div>
           </div>
           <ImageSlot
             src={PORTRAIT}
-            hint={t.hero.portraitAlt}
+            hint={content.hero.portraitAlt}
             className="h-[290px] w-[230px]"
             sizes="230px"
             scale={1.46}
@@ -50,11 +45,11 @@ export default function Home() {
             <span className="animate-pulse-dot absolute inset-0 rounded-full bg-brand" />
             <span className="absolute inset-[1.5px] rounded-full bg-brand" />
           </span>
-          <span className="font-mono text-xs tracking-[0.06em] text-dim">{t.nowLabel}</span>
+          <span className="font-mono text-xs tracking-[0.06em] text-dim">{content.nowLabel}</span>
           <span className="animate-sweep h-px flex-1" />
         </div>
         <div className="grid gap-px overflow-hidden rounded-lg border border-line bg-line [grid-template-columns:repeat(auto-fit,minmax(230px,1fr))]">
-          {t.now.map((item) => (
+          {content.now.map((item) => (
             <div key={item.tag} className="flex flex-col gap-2 bg-bg p-[22px]">
               <span className="font-mono text-[11px] tracking-[0.05em] text-brand">{item.tag}</span>
               <p className="text-[14.5px] leading-[1.55]">{item.text}</p>
@@ -69,14 +64,14 @@ export default function Home() {
           <StackDiagram />
           <div className="flex flex-1 basis-[300px] flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <h2 className="text-2xl font-semibold tracking-[-0.02em]">{t.stackTitle}</h2>
+              <h2 className="text-2xl font-semibold tracking-[-0.02em]">{content.stackTitle}</h2>
               <p className="max-w-[44ch] text-[15px] leading-relaxed text-dim text-pretty">
-                {t.stackIntro}
+                {content.stackIntro}
               </p>
             </div>
             {/* Reversed so layer 01 — the workshop — sits at the bottom of the stack. */}
             <div className="flex flex-col-reverse gap-px overflow-hidden rounded-md border border-line bg-line">
-              {t.stack.map((layer) => (
+              {content.stack.map((layer) => (
                 <div key={layer.n} className="flex items-baseline gap-3 bg-bg px-[14px] py-[11px]">
                   <span className="font-mono text-[11px] text-brand">{layer.n}</span>
                   <span className="text-[14.5px] font-semibold tracking-[-0.01em]">
@@ -95,7 +90,7 @@ export default function Home() {
       {/* --------------------------------- Cards --------------------------------- */}
       <section className="pt-14">
         <div className="grid gap-[14px] [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]">
-          {t.cards.map((card) => (
+          {content.cards.map((card) => (
             <Link
               key={card.href}
               href={card.href}

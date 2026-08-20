@@ -1,15 +1,13 @@
 import { faGithub, faLinkedinIn } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-regular-svg-icons";
 
-import { content, DEFAULT_LANG, EMAIL, GITHUB, LINKEDIN } from "@/lib/content";
-
-const base = content[DEFAULT_LANG];
+import { content, EMAIL, GITHUB, LINKEDIN } from "@/lib/content";
 
 /** Data for the Open Graph image, which renders outside the React tree. */
 export const pageData = {
-    pageTitle: `${base.meta.title} | Portfolio`,
-    heading: base.hero.name,
-    description: base.hero.eyebrow,
+    pageTitle: `${content.meta.title} | Portfolio`,
+    heading: content.hero.name,
+    description: content.hero.eyebrow,
     links: [
         {
             href: `mailto:${EMAIL}`,
