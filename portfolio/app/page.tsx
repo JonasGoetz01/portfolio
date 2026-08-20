@@ -28,17 +28,18 @@ export default function Home() {
             </div>
           </div>
           {/*
-            A fixed-width portrait leaves dead space beside it once the column
-            narrows, so on phones the frame spans the column and reads as a
-            deliberate band. The wide frame wants a looser crop than the narrow
-            desktop one, hence the two scales.
+            The source is 3024x4032 — a 3:4 portrait. The phone frame keeps a
+            portrait aspect so the picture is barely cropped; a landscape frame
+            here threw away most of its height. Centred and capped rather than
+            edge to edge, so it reads as deliberate at any column width.
+            The narrow desktop frame is tighter, hence the second scale.
           */}
           <ImageSlot
             src={PORTRAIT}
             hint={content.hero.portraitAlt}
-            className="h-[260px] w-full sm:h-[290px] sm:w-[230px]"
-            sizes="(max-width: 640px) 100vw, 230px"
-            scale={1.06}
+            className="mx-auto aspect-[4/5] w-full max-w-[320px] sm:mx-0 sm:aspect-auto sm:h-[290px] sm:w-[230px] sm:max-w-none"
+            sizes="(max-width: 640px) 320px, 230px"
+            scale={1.22}
             scaleSm={1.46}
             priority
           />
