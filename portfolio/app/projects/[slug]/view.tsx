@@ -4,9 +4,16 @@ import ContentBlocks from "../../_components/content-blocks";
 import { ProjectStructuredData } from "../../_components/structured-data";
 import ImageSlot from "../../_components/image-slot";
 import { content } from "@/lib/content";
+import type { MarkdownBlock } from "@/lib/markdown";
 import type { Project } from "@/lib/projects";
 
-export default function ProjectDetailView({ project }: { project: Project }) {
+export default function ProjectDetailView({
+  project,
+  blocks,
+}: {
+  project: Project;
+  blocks: MarkdownBlock[];
+}) {
   return (
     <article className="animate-rise-fast pt-[72px]">
       <ProjectStructuredData
@@ -54,7 +61,7 @@ export default function ProjectDetailView({ project }: { project: Project }) {
         />
       )}
 
-      <ContentBlocks blocks={project.detail} />
+      <ContentBlocks blocks={blocks} />
 
       {project.images.length > 0 && (
         <>

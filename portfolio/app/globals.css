@@ -28,7 +28,10 @@
   --line: #e5e5e5;
   --ink: #0f0f0f;
   --dim: #6d6d6d;
-  --brand: oklch(0.62 0.15 45);
+  /* #c2410c, not a lighter orange: at 11px the eyebrow labels need 4.5:1, and
+     this clears it on both --bg (5.18:1) and --surface (4.83:1). Verified by
+     the axe suite in tests/a11y.spec.ts. Matches the OG card and the PDF. */
+  --brand: #c2410c;
 
   --radius: 0.625rem;
 }
@@ -47,6 +50,295 @@
   ::selection {
     background: color-mix(in oklab, var(--brand) 25%, transparent);
   }
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Prose — rendered Markdown bodies on project and post pages                */
+/* -------------------------------------------------------------------------- */
+
+.prose {
+  --prose-measure: 68ch;
+  font-size: 15.5px;
+  line-height: 1.72;
+  color: var(--ink);
+}
+
+.prose > * {
+  max-width: var(--prose-measure);
+}
+
+/* Vertical rhythm: space comes from the top of each block, so the first one
+   never adds a gap and runs of prose stay evenly spaced. */
+.prose > * + * {
+  margin-top: 1.15em;
+}
+
+.prose p {
+  text-wrap: pretty;
+}
+
+/* ---- headings ---- */
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  scroll-margin-top: 96px; /* clears the sticky header when deep-linked */
+}
+
+.prose h2 {
+  margin-top: 2.1em;
+  font-size: 1.55em;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.prose h3 {
+  margin-top: 1.9em;
+  font-size: 1.2em;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.prose h4 {
+  margin-top: 1.7em;
+  font-size: 1em;
+  font-weight: 600;
+}
+
+/* A short brand rule above every h2, marking the start of a section. */
+.prose h2::before {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 2px;
+  margin-bottom: 0.75em;
+  background: var(--brand);
+}
+
+/* ---- inline ---- */
+
+.prose strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.prose a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--brand) 55%, transparent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+  transition:
+    color 0.15s ease,
+    text-decoration-color 0.15s ease;
+}
+
+.prose a:hover {
+  color: var(--brand);
+  text-decoration-color: var(--brand);
+}
+
+.prose code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.875em;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.12em 0.36em;
+  overflow-wrap: break-word;
+}
+
+/* ---- lists ---- */
+
+.prose ul,
+.prose ol {
+  padding-left: 1.35em;
+}
+
+.prose ul {
+  list-style: none;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li + li {
+  margin-top: 0.4em;
+}
+
+.prose ul > li {
+  position: relative;
+}
+
+/* A brand square instead of a bullet, aligned to the first line's baseline. */
+.prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: -1.1em;
+  top: 0.62em;
+  width: 5px;
+  height: 5px;
+  border-radius: 1px;
+  background: var(--brand);
+}
+
+.prose ol > li::marker {
+  color: var(--dim);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.85em;
+}
+
+/* Nested lists tighten up rather than repeating the full rhythm. */
+.prose li > ul,
+.prose li > ol {
+  margin-top: 0.4em;
+}
+
+/* ---- blockquote ---- */
+
+.prose blockquote {
+  border-left: 2px solid var(--brand);
+  padding: 0.1em 0 0.1em 1.15em;
+  color: var(--dim);
+  font-style: normal;
+}
+
+.prose blockquote p {
+  margin-top: 0;
+}
+
+.prose blockquote > * + * {
+  margin-top: 0.7em;
+}
+
+/* ---- code blocks ---- */
+
+.code-block {
+  position: relative;
+  max-width: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+/* The language, set into the top-right corner. */
+.code-block::after {
+  content: attr(data-lang);
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px 10px;
+  border-left: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  border-bottom-left-radius: 6px;
+  background: var(--bg);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+.code-block[data-lang="text"]::after {
+  content: none;
+}
+
+/* Shiki writes its own colours inline; only the frame is ours. Long lines
+   scroll inside the block rather than widening the page. */
+.code-block pre {
+  margin: 0;
+  padding: 18px 20px;
+  overflow-x: auto;
+  background: transparent !important;
+  font-size: 13.5px;
+  line-height: 1.65;
+  tab-size: 2;
+}
+
+.code-block code {
+  display: block;
+  background: none;
+  border: 0;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  white-space: pre;
+}
+
+/* Fallback for a block Shiki could not highlight. */
+.prose > pre {
+  max-width: none;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 18px 20px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+
+.prose > pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  white-space: pre;
+}
+
+/* ---- tables ---- */
+
+.prose table {
+  max-width: none;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14.5px;
+  display: block;
+  overflow-x: auto;
+}
+
+.prose th,
+.prose td {
+  border-bottom: 1px solid var(--line);
+  padding: 9px 14px 9px 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--dim);
+  border-bottom-color: var(--ink);
+}
+
+.prose tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* ---- rules and inline images ---- */
+
+.prose hr {
+  margin-top: 2.4em;
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+.prose :is(h2, h3, h4) + * {
+  margin-top: 0.7em;
 }
 
 /* -------------------------------------------------------------------------- */

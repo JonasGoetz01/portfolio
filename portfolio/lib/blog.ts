@@ -12,12 +12,11 @@ import {
   readContentDir,
   requireStr,
   str,
-  toBlocks,
   toImage,
   toImages,
-  type Block,
   type ContentImage,
 } from "@/lib/content-files";
+import { readingMinutes } from "@/lib/markdown";
 
 export type Post = {
   /** Filename without the extension; also the post URL. */
@@ -33,8 +32,10 @@ export type Post = {
   state: string;
   hero?: ContentImage;
   images: ContentImage[];
-  /** The post body: paragraphs and any pictures placed between them. */
-  body: Block[];
+  /** The raw Markdown body. Rendered by the post page via `renderMarkdown`. */
+  body: string;
+  /** Whole minutes at 200 wpm, from the body's prose. */
+  readingMinutes: number;
 };
 
 /** Frontmatter dates may already be parsed into a Date by the YAML reader. */
@@ -64,7 +65,8 @@ export function getPosts(): Post[] {
         state: str(data, "state"),
         hero: toImage(data.hero, title),
         images: toImages(data.images, title),
-        body: toBlocks(body, title, slug),
+        body,
+        readingMinutes: readingMinutes(body),
       };
       // Undated posts get the lower default so they sort first.
       const order = typeof data.order === "number" ? data.order : date ? 1 : 0;
@@ -81,4 +83,25 @@ export function getPosts(): Post[] {
 
 export function getPost(slug: string): Post | undefined {
   return getPosts().find((post) => post.slug === slug);
+}
+
+/** Just enough of a neighbouring post to render a link to it. */
+export type PostLink = { slug: string; title: string };
+
+/**
+ * The posts either side of this one, in listing order — `previous` is the one
+ * above it on `/blog`, `next` the one below. Both are undefined at the ends.
+ */
+export function getPostNeighbours(slug: string): {
+  previous?: PostLink;
+  next?: PostLink;
+} {
+  const posts = getPosts();
+  const index = posts.findIndex((post) => post.slug === slug);
+  if (index === -1) return {};
+
+  const link = (post: Post | undefined): PostLink | undefined =>
+    post && { slug: post.slug, title: post.title };
+
+  return { previous: link(posts[index - 1]), next: link(posts[index + 1]) };
 }

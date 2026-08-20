@@ -4,9 +4,19 @@ import ContentBlocks from "../../_components/content-blocks";
 import { PostStructuredData } from "../../_components/structured-data";
 import ImageSlot from "../../_components/image-slot";
 import { content } from "@/lib/content";
-import type { Post } from "@/lib/blog";
+import PostNav from "./post-nav";
+import type { Post, PostLink } from "@/lib/blog";
+import type { MarkdownBlock } from "@/lib/markdown";
 
-export default function PostView({ post }: { post: Post }) {
+export default function PostView({
+  post,
+  blocks,
+  neighbours,
+}: {
+  post: Post;
+  blocks: MarkdownBlock[];
+  neighbours: { previous?: PostLink; next?: PostLink };
+}) {
   return (
     <article className="animate-rise-fast pt-[72px]">
       <Link
@@ -32,6 +42,7 @@ export default function PostView({ post }: { post: Post }) {
           <span className="text-dim">{post.dateLabel}</span>
         )}
         {post.state && <span className="tracking-[0.05em] text-brand">{post.state}</span>}
+        <span className="text-dim">{post.readingMinutes} min read</span>
       </div>
       <h1 className="mb-[10px] text-[40px] font-semibold leading-tight tracking-[-0.03em]">
         {post.title}
@@ -50,7 +61,9 @@ export default function PostView({ post }: { post: Post }) {
         />
       )}
 
-      <ContentBlocks blocks={post.body} />
+      <ContentBlocks blocks={blocks} />
+
+      <PostNav previous={neighbours.previous} next={neighbours.next} />
 
       {post.images.length > 0 && (
         <>

@@ -4,7 +4,16 @@ import { content } from "@/lib/content";
 export default function ResumeView() {
   return (
     <section className="animate-rise-fast pt-[72px]">
-      <PageIntro title={content.resume.title} />
+      <div className="mb-11 flex flex-wrap items-baseline justify-between gap-4">
+        <PageIntro title={content.resume.title} />
+        <a
+          href="/resume/jonas-goetz-cv.pdf"
+          download
+          className="font-mono text-[12.5px] text-brand transition-colors hover:text-ink"
+        >
+          {content.resume.download} ↓
+        </a>
+      </div>
 
       <h2 className="mb-5 font-mono text-xs font-medium tracking-[0.06em] text-dim">
         {content.resume.experience}

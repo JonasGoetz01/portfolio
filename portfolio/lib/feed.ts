@@ -20,10 +20,7 @@ const author = `${EMAIL} (${content.hero.name})`;
 
 function item(post: Post): string {
   const url = `${SITE_URL}/blog/${post.slug}`;
-  const body = post.body
-    .filter((block) => block.kind === "text")
-    .map((block) => block.text)
-    .join("\n\n");
+  const body = post.body.trim();
 
   return [
     "    <item>",
