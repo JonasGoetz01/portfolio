@@ -9,10 +9,10 @@ import { getProjects } from "@/lib/projects";
  * without anyone remembering to add it.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/resume", "/projects", "/blog"].map((path) => ({
+  const staticRoutes = ["", "/resume", "/projects", "/blog", "/impressum"].map((path) => ({
     url: `${SITE_URL}${path}`,
-    changeFrequency: "monthly" as const,
-    priority: path === "" ? 1 : 0.8,
+    changeFrequency: path === "/impressum" ? ("yearly" as const) : ("monthly" as const),
+    priority: path === "" ? 1 : path === "/impressum" ? 0.2 : 0.8,
   }));
 
   const projects = getProjects().map((project) => ({

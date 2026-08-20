@@ -75,6 +75,30 @@ export type SiteContent = {
   };
   contact: { title: string; intro: string };
   footer: string;
+  /**
+   * Legal notice required of German sites by §5 DDG. Deliberately in German:
+   * it exists to satisfy German law, and that is the language it is read in.
+   */
+  impressum: {
+    title: string;
+    /** §5 DDG — "Angaben gemäß §5 DDG". */
+    providerLabel: string;
+    name: string;
+    /** Street and number. Empty until filled in — see the note in the object. */
+    street: string;
+    /** Postcode and city. */
+    city: string;
+    country: string;
+    contactLabel: string;
+    /** §18 Abs. 2 MStV — required once a site carries editorial content. */
+    responsibleLabel: string;
+    liabilityTitle: string;
+    liabilityContent: string;
+    liabilityLinksTitle: string;
+    liabilityLinks: string;
+    copyrightTitle: string;
+    copyright: string;
+  };
 };
 
 /**
@@ -302,4 +326,32 @@ export const content: SiteContent = {
     intro: "For ideas, questions or suggestions.",
   },
   footer: "© 2026 Jonas Götz — Heilbronn, Germany",
+
+  impressum: {
+    title: "Impressum",
+    providerLabel: "Angaben gemäß § 5 DDG",
+    name: "Jonas Götz",
+
+    // TODO: §5 DDG requires a postal address at which the provider can be
+    // reached — a PO box is not enough. Until these two lines hold a real
+    // address the page is incomplete, and `lib/content.test.ts` fails to say so.
+    street: "",
+    city: "",
+    country: "Deutschland",
+
+    contactLabel: "Kontakt",
+    responsibleLabel: "Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV",
+
+    liabilityTitle: "Haftung für Inhalte",
+    liabilityContent:
+      "Als Diensteanbieter bin ich gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten verantwortlich. Nach §§ 8 bis 10 DDG bin ich als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werde ich diese Inhalte unverzüglich entfernen.",
+
+    liabilityLinksTitle: "Haftung für Links",
+    liabilityLinks:
+      "Dieses Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte ich keinen Einfluss habe. Deshalb kann ich für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werde ich derartige Links unverzüglich entfernen.",
+
+    copyrightTitle: "Urheberrecht",
+    copyright:
+      "Die durch den Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Der Quellcode dieser Seite ist auf GitHub öffentlich einsehbar.",
+  },
 };

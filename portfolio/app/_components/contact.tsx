@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { EMAIL, GITHUB, LINKEDIN, content } from "@/lib/content";
 
 const LINKS = [
@@ -35,7 +37,13 @@ export default function Contact() {
           </div>
         </div>
       </section>
-      <footer className="mt-14 font-mono text-[11px] text-dim">{content.footer}</footer>
+      <footer className="mt-14 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] text-dim">
+        <span>{content.footer}</span>
+        {/* §5 DDG: the legal notice must be reachable from every page. */}
+        <Link href="/impressum" className="transition-colors hover:text-ink">
+          {content.impressum.title}
+        </Link>
+      </footer>
     </>
   );
 }
