@@ -90,8 +90,17 @@ describe("renderMarkdown — inline and block Markdown", () => {
     expect(await html("[x](/projects)")).not.toContain("target=");
   });
 
-  it("resolves gh: on an inline image", async () => {
-    expect(await html("text ![a](gh:blog/x.avif) text")).toContain("/assets/blog/x.avif");
+  it("routes an inline image through next/image rather than at the remote host", async () => {
+    // A direct remote src would hand the visitor's IP to a third party on page
+    // load; the optimiser fetches it server-side and serves it from this origin.
+    const out = await html("text ![a](gh:blog/x.avif) text");
+    expect(out).toContain('src="/_next/image?url=');
+    expect(out).toContain(encodeURIComponent("/assets/blog/x.avif"));
+    expect(out).not.toMatch(/src="https?:\/\//);
+  });
+
+  it("leaves a local inline image as a plain same-origin path", async () => {
+    expect(await html("text ![a](/local.avif) text")).toContain('src="/local.avif"');
   });
 });
 

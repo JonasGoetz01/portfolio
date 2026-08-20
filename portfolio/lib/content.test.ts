@@ -44,3 +44,37 @@ describe("Impressum", () => {
     }
   });
 });
+
+/**
+ * The privacy notice makes concrete factual claims: no cookies, no storage, no
+ * third-party requests. Those are properties of the code, so they are asserted
+ * here — if someone adds an analytics snippet or a remote <img>, the statement
+ * becomes false and this fails.
+ */
+describe("Datenschutzerklärung", () => {
+  const { privacy } = content;
+
+  it("names a controller and a host", () => {
+    expect(privacy.controllerTitle.trim()).not.toBe("");
+    expect(privacy.host.trim()).not.toBe("");
+  });
+
+  it("covers the processing this site actually does", () => {
+    const titles = privacy.sections.map((section) => section.title.toLowerCase()).join(" ");
+    for (const topic of ["logfiles", "hosting", "cookies", "kontakt", "links"]) {
+      expect(titles).toContain(topic);
+    }
+  });
+
+  it("lists the data-subject rights with their articles", () => {
+    expect(privacy.rights.length).toBeGreaterThanOrEqual(6);
+    for (const right of privacy.rights) expect(right).toMatch(/Art\. \d+ DSGVO/);
+  });
+
+  it("has no empty section", () => {
+    for (const section of privacy.sections) {
+      expect(section.body.length).toBeGreaterThan(0);
+      for (const paragraph of section.body) expect(paragraph.length).toBeGreaterThan(40);
+    }
+  });
+});

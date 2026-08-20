@@ -99,6 +99,25 @@ export type SiteContent = {
     copyrightTitle: string;
     copyright: string;
   };
+  /**
+   * Privacy notice under Art. 13 GDPR. German for the same reason as the
+   * Impressum. The text describes what this site actually does — no cookies, no
+   * analytics, no third-party requests — so it must be revisited if that
+   * changes.
+   */
+  privacy: {
+    title: string;
+    intro: string;
+    /** Who is responsible, per Art. 4 No. 7 GDPR. */
+    controllerTitle: string;
+    /** Named so the section can point at the hosting provider. */
+    host: string;
+    sections: { title: string; body: string[] }[];
+    rightsTitle: string;
+    rightsIntro: string;
+    rights: string[];
+    rightsOutro: string;
+  };
 };
 
 /**
@@ -353,5 +372,80 @@ export const content: SiteContent = {
     copyrightTitle: "Urheberrecht",
     copyright:
       "Die durch den Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Der Quellcode dieser Seite ist auf GitHub öffentlich einsehbar.",
+  },
+
+  privacy: {
+    title: "Datenschutzerklärung",
+    intro:
+      "Diese Website ist eine private Seite ohne Analyse-Werkzeuge, ohne Werbung und ohne Cookies. Sie setzt keine Tracker, bindet keine Inhalte Dritter nach und legt keine Daten im Browser ab. Verarbeitet werden allein die Daten, die beim Abruf einer Seite technisch anfallen. Die folgenden Angaben erfüllen die Informationspflicht nach Art. 13 DSGVO.",
+
+    controllerTitle: "Verantwortlicher",
+    host: "Railway",
+
+    sections: [
+      {
+        title: "Server-Logfiles",
+        body: [
+          "Beim Abruf dieser Website übermittelt Ihr Browser technisch notwendige Daten, die der Hosting-Anbieter in Logfiles erfasst: die IP-Adresse, Datum und Uhrzeit des Zugriffs, die aufgerufene Adresse, den HTTP-Statuscode, die übertragene Datenmenge, den zuvor besuchten Verweis (Referrer) sowie Browser- und Betriebssystemkennung.",
+          "Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Das berechtigte Interesse liegt im technischen Betrieb, in der Stabilität und in der Absicherung der Website gegen Missbrauch. Diese Daten werden nicht mit anderen Datenquellen zusammengeführt und nicht zur Bildung von Nutzungsprofilen verwendet. Eine Auswertung findet nur anlassbezogen statt, etwa zur Aufklärung einer Störung oder eines Angriffs.",
+        ],
+      },
+      {
+        title: "Hosting",
+        body: [
+          "Die Website wird bei Railway betrieben. Der Anbieter verarbeitet die oben genannten Logdaten als Auftragsverarbeiter ausschließlich zum Zweck der Bereitstellung der Website und ist hierbei an Weisungen gebunden. Der Anbieter hat seinen Sitz in den Vereinigten Staaten; eine Verarbeitung außerhalb der Europäischen Union ist daher nicht ausgeschlossen.",
+        ],
+      },
+      {
+        title: "Keine Cookies, keine Reichweitenmessung",
+        body: [
+          "Diese Website setzt keine Cookies und nutzt weder Local Storage noch Session Storage. Es sind keine Analyse-, Statistik- oder Werbedienste eingebunden, es findet keine Reichweitenmessung statt, und es werden keine Daten an Dritte zu Analysezwecken übermittelt. Ein Einwilligungsbanner ist deshalb nicht erforderlich.",
+        ],
+      },
+      {
+        title: "Schriften und Bilder",
+        body: [
+          "Alle Schriftarten werden von diesem Server ausgeliefert. Es besteht beim Seitenabruf keine Verbindung zu Google Fonts oder einem anderen externen Schriftdienst.",
+          "Bilder werden ebenfalls ausschließlich von diesem Server ausgeliefert. Soweit Bilddateien in einem externen Repository liegen, werden sie serverseitig abgerufen und zwischengespeichert — Ihr Browser stellt keine Verbindung zu Dritten her, und Ihre IP-Adresse wird dorthin nicht übertragen.",
+        ],
+      },
+      {
+        title: "Kontaktaufnahme",
+        body: [
+          "Diese Website enthält kein Kontaktformular. Wenn Sie die angegebene E-Mail-Adresse nutzen, werden die von Ihnen übermittelten Daten zur Bearbeitung Ihrer Anfrage verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO, bei Anfragen zu einem Vertragsverhältnis Art. 6 Abs. 1 lit. b DSGVO. Ihre Nachricht wird gelöscht, sobald sie nicht mehr benötigt wird und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.",
+        ],
+      },
+      {
+        title: "Externe Links",
+        body: [
+          "Auf dieser Website befinden sich Links zu externen Diensten, etwa GitHub und LinkedIn. Diese werden erst aufgerufen, wenn Sie den jeweiligen Link anklicken. Vorher werden keine Daten an diese Anbieter übermittelt. Für die Verarbeitung nach dem Klick ist der jeweilige Anbieter verantwortlich.",
+        ],
+      },
+      {
+        title: "Verschlüsselung",
+        body: [
+          "Diese Website wird ausschließlich über HTTPS ausgeliefert. Die Verbindung zwischen Ihrem Browser und dem Server ist damit verschlüsselt und der Inhalt für Dritte nicht mitlesbar.",
+        ],
+      },
+      {
+        title: "Keine automatisierte Entscheidungsfindung",
+        body: [
+          "Es findet keine automatisierte Entscheidungsfindung einschließlich Profiling nach Art. 22 DSGVO statt.",
+        ],
+      },
+    ],
+
+    rightsTitle: "Ihre Rechte",
+    rightsIntro: "Sie haben im Rahmen der gesetzlichen Voraussetzungen das Recht auf",
+    rights: [
+      "Auskunft über die zu Ihrer Person verarbeiteten Daten (Art. 15 DSGVO)",
+      "Berichtigung unrichtiger Daten (Art. 16 DSGVO)",
+      "Löschung (Art. 17 DSGVO)",
+      "Einschränkung der Verarbeitung (Art. 18 DSGVO)",
+      "Datenübertragbarkeit (Art. 20 DSGVO)",
+      "Widerspruch gegen eine Verarbeitung auf Grundlage berechtigter Interessen (Art. 21 DSGVO)",
+    ],
+    rightsOutro:
+      "Für die Ausübung dieser Rechte genügt eine Nachricht an die oben genannte E-Mail-Adresse. Unabhängig davon steht Ihnen ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde zu, insbesondere bei der Behörde Ihres gewöhnlichen Aufenthaltsorts oder der für den Verantwortlichen zuständigen Stelle.",
   },
 };

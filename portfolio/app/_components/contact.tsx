@@ -39,9 +39,12 @@ export default function Contact() {
       </section>
       <footer className="mt-14 flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] text-dim">
         <span>{content.footer}</span>
-        {/* §5 DDG: the legal notice must be reachable from every page. */}
+        {/* §5 DDG and Art. 13 GDPR: both notices reachable from every page. */}
         <Link href="/impressum" className="transition-colors hover:text-ink">
           {content.impressum.title}
+        </Link>
+        <Link href="/datenschutz" className="transition-colors hover:text-ink">
+          {content.privacy.title}
         </Link>
       </footer>
     </>

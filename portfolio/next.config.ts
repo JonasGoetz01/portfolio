@@ -12,7 +12,11 @@ const CSP = [
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   "font-src 'self'",
-  "img-src 'self' data: blob: https://raw.githubusercontent.com https://*.githubusercontent.com",
+  // Every picture reaches the browser from this origin: next/image proxies the
+  // remote ones server-side, and the Markdown renderer routes inline ones the
+  // same way. Keeping this at 'self' enforces that — a direct remote <img>
+  // would hand a third party the visitor's IP, and is now blocked outright.
+  "img-src 'self' data: blob:",
   "connect-src 'self'",
   "form-action 'self'",
   "frame-ancestors 'none'",

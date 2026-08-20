@@ -9,10 +9,13 @@ import { getProjects } from "@/lib/projects";
  * without anyone remembering to add it.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ["", "/resume", "/projects", "/blog", "/impressum"].map((path) => ({
+  // The legal pages belong in the sitemap but should not compete with the
+  // content, hence the low priority.
+  const LEGAL = ["/impressum", "/datenschutz"];
+  const staticRoutes = ["", "/resume", "/projects", "/blog", ...LEGAL].map((path) => ({
     url: `${SITE_URL}${path}`,
-    changeFrequency: path === "/impressum" ? ("yearly" as const) : ("monthly" as const),
-    priority: path === "" ? 1 : path === "/impressum" ? 0.2 : 0.8,
+    changeFrequency: LEGAL.includes(path) ? ("yearly" as const) : ("monthly" as const),
+    priority: path === "" ? 1 : LEGAL.includes(path) ? 0.2 : 0.8,
   }));
 
   const projects = getProjects().map((project) => ({
