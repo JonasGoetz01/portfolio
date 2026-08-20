@@ -2,10 +2,9 @@
 order: 1
 stack: [Next.js, FastAPI, PostgreSQL, Self-hosted]
 
-# Put the files in assets/ at the repo root, then uncomment these.
-# hero: gh:projects/learning-hub.avif
-# images:
-#   - gh:projects/learning-hub-dashboard.avif
+hero:
+  src: gh:projects/learninghub.avif
+  alt: A student dashboard, with the streak counter, cursus selector and campus calendar
 
 kind: WORK — 42 HEILBRONN
 title: Learning Hub
@@ -26,14 +25,22 @@ through, and the administration the staff side needs behind it.
 It grew out of the day-to-day of running the campus, which is why the feature
 list reads like a list of things that used to be done by hand:
 
-- **Dashboard** — where a student stands, at a glance.
-- **Events** — what is on, and who is coming, synchronised to real calendars
-  rather than living only in a web page.
-- **Projects** — the curriculum, and progress through it.
-- **Leaderboard and streaks** — the visible side of a peer-driven system.
-- **Gallery** — the campus, as it happens.
-- **Users and admin** — the staff-side tooling, including the parts that only
-  exist because a rule changed and something had to be corrected.
+- **Dashboard** — where a student stands: streak, shields, their Piscine cohort,
+  and whether they are available, all above the day's calendar.
+- **Events** — what is on and who is coming, with a _Subscribe to calendar_
+  button, because an event nobody sees is an event nobody attends.
+- **Projects, cursuses and skills** — the curriculum, and progress through it,
+  switched per cursus from the header.
+- **Tickets and proposals** — how a student asks for something or suggests it,
+  rather than finding whoever happens to be at the desk.
+- **Floor plans and phone booths** — where things and people are, which on a
+  campus of a few hundred is a genuine question.
+- **Announcements and short links** — the staff side of talking to everyone.
+- **Notion and Student Slack** — the tools that live elsewhere, reachable from
+  the same sidebar rather than from a bookmark folder.
+
+There is a student search on `⌘K` from anywhere, which is the feature the staff
+side uses most and the one that would be missed first.
 
 Student and project data is imported from 42's own API on a schedule, so the Hub
 stays in step with the wider network rather than becoming a second source of
@@ -81,8 +88,8 @@ is shadcn/ui on Radix with Tailwind 4.
 
 Around those two sit the services that make the features possible rather than
 merely nice: PostgreSQL 16 with a pooled connection, Valkey for caching, and a
-Radicale CalDAV server so campus events land in the calendar app a student
-already uses.
+Radicale CalDAV server, so a student subscribes once and campus events appear in
+the calendar app they already use.
 
 ## Self-hosted, on purpose
 
