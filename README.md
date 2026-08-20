@@ -137,10 +137,19 @@ change. The last two need a browser: `bunx playwright install chromium` once.
 `prefers-reduced-motion` emulated so it samples the settled page rather than a
 half-finished fade-in. It also walks the keyboard path to the skip link.
 
-`test:lh` asserts a budget rather than just reporting a score: 100 for
-accessibility, best-practices and SEO, at least 0.98 for performance, plus caps
-on LCP, CLS, TBT and total page weight. The site currently scores 100 in all
-four categories on every route.
+`test:lh` asserts a budget, split by whether an audit is reproducible
+(`lighthouserc.cjs` explains the split):
+
+- **Errors** — the machine-independent ones: 100 for accessibility,
+  best-practices and SEO; caps on page weight, layout shift and unminified or
+  uncompressed assets. A failure here is a real regression.
+- **Warnings** — everything timing-based, including the performance score
+  itself. A GitHub runner is a throttled, shared VM: this site measures a Total
+  Blocking Time of 0 ms locally and around 620 ms there. That number is the
+  runner, not the site, so it is reported rather than enforced.
+
+Locally the site scores 100 in all four categories on every route, with LCP
+around 0.5 s and no layout shift.
 
 The build is a real check, not just a compile: the content loaders throw on a
 missing `title`, a duplicate slug, a slug that is not lowercase-hyphenated, or
