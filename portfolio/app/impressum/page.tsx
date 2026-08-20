@@ -27,7 +27,9 @@ export default function ImpressumPage() {
   const hasAddress = Boolean(impressum.street && impressum.city);
 
   return (
-    <section className="animate-rise-fast pt-[72px]">
+    // The prose is German; marking it lets a screen reader pronounce it and
+    // lets the browser hyphenate the long compounds correctly.
+    <section lang="de" className="animate-rise-fast pt-[72px]">
       <PageIntro title={impressum.title} />
 
       <h2 className="mb-[10px] font-mono text-[11px] tracking-[0.06em] text-dim uppercase">

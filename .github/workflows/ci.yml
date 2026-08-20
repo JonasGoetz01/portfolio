@@ -68,9 +68,10 @@ jobs:
       - name: Install Chromium
         run: bunx playwright install --with-deps chromium
 
-      # axe-core over every route, plus the keyboard path to the skip link.
-      - name: Accessibility
-        run: bun run test:a11y
+      # axe-core over every route, the keyboard path to the skip link, and the
+      # mobile layout checks (no page may scroll sideways at 320px).
+      - name: Accessibility and layout
+        run: bun run test:browser
 
       - name: Upload accessibility report
         if: failure()

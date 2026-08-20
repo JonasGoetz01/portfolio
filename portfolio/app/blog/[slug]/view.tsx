@@ -44,7 +44,7 @@ export default function PostView({
         {post.state && <span className="tracking-[0.05em] text-brand">{post.state}</span>}
         <span className="text-dim">{post.readingMinutes} min read</span>
       </div>
-      <h1 className="mb-[10px] text-[40px] font-semibold leading-tight tracking-[-0.03em]">
+      <h1 className="mb-[10px] text-[clamp(30px,8vw,40px)] font-semibold leading-tight tracking-[-0.03em] hyphens-auto break-words">
         {post.title}
       </h1>
       {post.excerpt && (

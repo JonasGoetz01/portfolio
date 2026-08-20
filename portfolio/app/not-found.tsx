@@ -12,7 +12,7 @@ export default function NotFound() {
       <span className="mb-[10px] block font-mono text-[11px] tracking-[0.05em] text-brand">
         404
       </span>
-      <h1 className="mb-[10px] text-[40px] font-semibold leading-tight tracking-[-0.03em]">
+      <h1 className="mb-[10px] text-[clamp(30px,8vw,40px)] font-semibold leading-tight tracking-[-0.03em] hyphens-auto break-words">
         Nothing here
       </h1>
       <p className="mb-11 max-w-[52ch] text-base leading-relaxed text-dim">

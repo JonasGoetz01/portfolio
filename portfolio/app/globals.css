@@ -53,6 +53,25 @@
 }
 
 /* -------------------------------------------------------------------------- */
+/*  Image framing                                                             */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * Zoom on top of the cover crop, set by ImageSlot through custom properties so
+ * a picture can be framed differently on a wide phone slot than on a narrow
+ * desktop one. `--img-scale-sm` falls back to `--img-scale` when unset.
+ */
+.img-zoom {
+  transform: scale(var(--img-scale, 1));
+}
+
+@media (width >= 40rem) {
+  .img-zoom {
+    transform: scale(var(--img-scale-sm, var(--img-scale, 1)));
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Prose — rendered Markdown bodies on project and post pages                */
 /* -------------------------------------------------------------------------- */
 

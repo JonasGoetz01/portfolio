@@ -126,16 +126,18 @@ bun run lint           # eslint, next/core-web-vitals + typescript
 bun run typecheck      # tsc --noEmit
 bun run test           # vitest — the content pipeline
 bun run build          # also validates every content file
-bun run test:a11y      # axe-core over every route, in a real browser
+bun run test:browser   # axe-core + mobile layout, in a real browser
 bun run test:lh        # Lighthouse budgets
 ```
 
 `bun run format` writes instead of checking, and `bun run test:watch` re-runs on
 change. The last two need a browser: `bunx playwright install chromium` once.
 
-`test:a11y` runs axe-core against the production build on every route, with
+`test:browser` runs axe-core against the production build on every route, with
 `prefers-reduced-motion` emulated so it samples the settled page rather than a
-half-finished fade-in. It also walks the keyboard path to the skip link.
+half-finished fade-in. It also walks the keyboard path to the skip link, and
+checks at 320px that no page scrolls sideways — the failure that makes a site
+feel broken on a phone, and one that is invisible on a desktop screen.
 
 `test:lh` asserts a budget, split by whether an audit is reproducible
 (`lighthouserc.cjs` explains the split):

@@ -3,7 +3,7 @@ export default function PageIntro({ title, intro }: { title: string; intro?: str
   return (
     <>
       <h1
-        className={`text-[40px] font-semibold leading-tight tracking-[-0.03em] ${
+        className={`text-[clamp(30px,8vw,40px)] font-semibold leading-tight tracking-[-0.03em] hyphens-auto break-words ${
           intro ? "mb-[10px]" : "mb-11"
         }`}
       >

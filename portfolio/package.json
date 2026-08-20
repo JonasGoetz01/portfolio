@@ -10,10 +10,10 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:browser": "playwright test",
+    "test:lh": "lhci autorun --config=./lighthouserc.cjs",
     "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "test:a11y": "playwright test",
-    "test:lh": "lhci autorun --config=./lighthouserc.cjs"
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^7.3.1",

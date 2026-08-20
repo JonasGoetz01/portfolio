@@ -8,15 +8,15 @@ export default function Home() {
   return (
     <>
       {/* ---------------------------------- Hero --------------------------------- */}
-      <section className="animate-rise pb-2 pt-[72px]">
-        <div className="flex flex-wrap items-start gap-11">
-          <div className="flex flex-1 basis-[340px] flex-col gap-[22px]">
+      <section className="animate-rise pb-2 pt-9 sm:pt-[72px]">
+        <div className="flex flex-col gap-8 sm:flex-row sm:flex-wrap sm:items-start sm:gap-11">
+          <div className="flex flex-col gap-[22px] sm:flex-1 sm:basis-[340px]">
             <div className="flex flex-col gap-[10px]">
               <span className="font-mono text-xs tracking-[0.06em] text-brand">
                 {content.hero.eyebrow}
                 <span className="animate-caret ml-[3px] inline-block">_</span>
               </span>
-              <h1 className="text-[clamp(40px,9vw,56px)] font-semibold leading-[1.02] tracking-[-0.03em]">
+              <h1 className="text-[clamp(34px,9vw,56px)] font-semibold leading-[1.02] tracking-[-0.03em] break-words">
                 {content.hero.name}
               </h1>
             </div>
@@ -27,12 +27,19 @@ export default function Home() {
               </p>
             </div>
           </div>
+          {/*
+            A fixed-width portrait leaves dead space beside it once the column
+            narrows, so on phones the frame spans the column and reads as a
+            deliberate band. The wide frame wants a looser crop than the narrow
+            desktop one, hence the two scales.
+          */}
           <ImageSlot
             src={PORTRAIT}
             hint={content.hero.portraitAlt}
-            className="h-[290px] w-[230px]"
-            sizes="230px"
-            scale={1.46}
+            className="h-[260px] w-full sm:h-[290px] sm:w-[230px]"
+            sizes="(max-width: 640px) 100vw, 230px"
+            scale={1.06}
+            scaleSm={1.46}
             priority
           />
         </div>

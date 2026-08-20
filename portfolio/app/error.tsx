@@ -22,7 +22,7 @@ export default function Error({
       <span className="mb-[10px] block font-mono text-[11px] tracking-[0.05em] text-brand">
         ERROR
       </span>
-      <h1 className="mb-[10px] text-[40px] font-semibold leading-tight tracking-[-0.03em]">
+      <h1 className="mb-[10px] text-[clamp(30px,8vw,40px)] font-semibold leading-tight tracking-[-0.03em] hyphens-auto break-words">
         That did not work
       </h1>
       <p className="mb-9 max-w-[52ch] text-base leading-relaxed text-dim">

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { CSSProperties } from "react";
 
 type Props = {
   /** Path under /public. Leave empty to show the placeholder. */
@@ -8,6 +9,13 @@ type Props = {
   className?: string;
   /** Zoom applied on top of the cover crop, mirroring the design's framing. */
   scale?: number;
+  /**
+   * Zoom from the `sm` breakpoint up. A wide phone frame and a narrow desktop
+   * one want different crops of the same picture, and one element cannot carry
+   * two inline transforms — so the values go in as custom properties and
+   * `.img-zoom` in globals.css picks the right one per breakpoint.
+   */
+  scaleSm?: number;
   sizes?: string;
   priority?: boolean;
 };
@@ -21,6 +29,7 @@ export default function ImageSlot({
   hint,
   className = "",
   scale,
+  scaleSm,
   sizes = "(max-width: 768px) 100vw, 400px",
   priority,
 }: Props) {
@@ -42,8 +51,15 @@ export default function ImageSlot({
         fill
         sizes={sizes}
         priority={priority}
-        className="object-cover"
-        style={scale ? { transform: `scale(${scale})` } : undefined}
+        className={`object-cover${scale ? " img-zoom" : ""}`}
+        style={
+          scale
+            ? ({
+                "--img-scale": scale,
+                ...(scaleSm ? { "--img-scale-sm": scaleSm } : {}),
+              } as CSSProperties)
+            : undefined
+        }
       />
     </div>
   );
