@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+# A newer push to the same branch makes an in-flight run pointless.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: portfolio
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: portfolio/package.json
+
+      # --frozen-lockfile: fail if bun.lock does not match package.json,
+      # rather than silently resolving something else than local development.
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Format
+        run: bun run format:check
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Types
+        run: bun run typecheck
+
+      - name: Test
+        run: bun run test
+
+      # Also proves the content files parse and the required fields are present,
+      # since the loaders throw during the build.
+      - name: Build
+        run: bun run build

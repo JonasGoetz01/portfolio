@@ -11,15 +11,15 @@ text, and how images work (including `gh:` GitHub hosting).
 
 ```markdown
 ---
-order: 1                        # lower sorts first; omit to sort last
-stack: [Go, Kubernetes]         # the small tags on the card
+order: 1 # lower sorts first; omit to sort last
+stack: [Go, Kubernetes] # the small tags on the card
 
-hero: gh:projects/my-thing/hero.avif      # the one big picture
-images:                                   # optional gallery under the body
+hero: gh:projects/my-thing/hero.avif # the one big picture
+images: # optional gallery under the body
   - gh:projects/my-thing/detail.avif
   - { src: gh:projects/my-thing/rack.avif, alt: The finished rack }
 
-kind: WORK — 42 HEILBRONN       # small eyebrow above the title
+kind: WORK — 42 HEILBRONN # small eyebrow above the title
 title: My Thing
 subtitle: One or two lines, shown on the card and under the title.
 ---
@@ -33,13 +33,13 @@ More detail text.
 
 ## Fields
 
-| Field | Required | Notes |
-| --- | --- | --- |
-| `title` | yes | Falls back to the filename. |
-| `subtitle` | no | Shown on the card and under the title. |
-| `kind` | no | Small eyebrow line, e.g. `WORK — 42 HEILBRONN`. |
-| `stack` | no | Tag list on the card and detail page. |
-| `hero` | no | The big picture at the top of the detail page. |
-| `images` | no | Gallery under the body. |
-| `order` | no | Sort position. Files without it sort last, then by filename. |
-| `slug` | no | Overrides the filename as the URL. |
+| Field      | Required | Notes                                                        |
+| ---------- | -------- | ------------------------------------------------------------ |
+| `title`    | yes      | Falls back to the filename.                                  |
+| `subtitle` | no       | Shown on the card and under the title.                       |
+| `kind`     | no       | Small eyebrow line, e.g. `WORK — 42 HEILBRONN`.              |
+| `stack`    | no       | Tag list on the card and detail page.                        |
+| `hero`     | no       | The big picture at the top of the detail page.               |
+| `images`   | no       | Gallery under the body.                                      |
+| `order`    | no       | Sort position. Files without it sort last, then by filename. |
+| `slug`     | no       | Overrides the filename as the URL.                           |

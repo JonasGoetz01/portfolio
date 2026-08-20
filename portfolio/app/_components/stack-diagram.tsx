@@ -9,7 +9,12 @@ const PACKETS = [
 ];
 
 const PLATES = [
-  { inset: "0", border: "var(--line)", fill: "color-mix(in oklab,var(--ink) 5%,transparent)", z: 0 },
+  {
+    inset: "0",
+    border: "var(--line)",
+    fill: "color-mix(in oklab,var(--ink) 5%,transparent)",
+    z: 0,
+  },
   {
     inset: "12px",
     border: "color-mix(in oklab,var(--brand) 45%,var(--line))",

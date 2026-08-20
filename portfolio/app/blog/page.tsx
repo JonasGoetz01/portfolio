@@ -6,6 +6,7 @@ import { getPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: `${content.blogPage.title} — Jonas Götz`,
+  alternates: { canonical: "/blog" },
   description: content.blogPage.intro,
 };
 

@@ -83,6 +83,12 @@ export type SiteContent = {
   footer: string;
 };
 
+/**
+ * The canonical origin. Used for `metadataBase`, the sitemap, robots.txt and
+ * the JSON-LD, so the site has exactly one source of truth for its own URL.
+ */
+export const SITE_URL = "https://goetz.sh";
+
 export const EMAIL = "jonas@goetz.sh";
 export const GITHUB = "https://github.com/jonasGoetz01/";
 export const LINKEDIN = "https://www.linkedin.com/in/jonasgoetz01/";

@@ -8,9 +8,9 @@ Personal portfolio site (Next.js, Tailwind, shadcn/ui), deployed on Railway with
 
 ### Devbox — what it is and why I use it
 
-**[Devbox](https://www.jetify.com/devbox)** is a dev-environment manager that installs tools (e.g. Bun, Node, AWS CLI) per project via a single config file. No global installs, no “works on my machine.”
+**[Devbox](https://www.jetify.com/devbox)** is a dev-environment manager that installs tools (e.g. Bun, git, ImageMagick) per project via a single config file. No global installs, no “works on my machine.”
 
-- **Why I use it for local dev:** Same tool versions (Bun, AWS CLI, git, etc.) for everyone and in CI. No need to remember to install things; `devbox shell` or direnv does it.
+- **Why I use it for local dev:** Same tool versions (Bun, git, ImageMagick) for everyone and in CI, pinned in `devbox.lock`. No need to remember to install things; `devbox shell` or direnv does it.
 - **Comparison:**
   - **Docker / Dev Containers:** Full OS image, heavier, great for “exact production clone.” Devbox only installs **binaries** (like a better `asdf`/`mise`), so it’s faster and lighter; you still use your host OS and editor.
   - **Devbox:** Declarative `devbox.json`, no Docker daemon, fast shell startup. Best when you want consistent **tools** (runtimes, CLIs) without containers.
@@ -21,13 +21,13 @@ Docs: [jetify.com/docs/devbox](https://www.jetify.com/docs/devbox)
 
 **[direnv](https://direnv.net/)** loads environment variables and commands when you `cd` into a directory. This repo uses it to load the Devbox environment and optional `.env` secrets.
 
-- **What it does here:** Runs `devbox generate direnv`, so `cd`-ing into the project automatically activates Devbox (Bun, AWS CLI, etc.) and runs `dotenv_if_exists .env` for secrets. It also aliases `npm` → `bun` and `npx` → `bunx`.
+- **What it does here:** Runs `devbox generate direnv`, so `cd`-ing into the project automatically activates Devbox (Bun, git, ImageMagick) and runs `dotenv_if_exists .env` for secrets. It also aliases `npm` → `bun` and `npx` → `bunx`.
 
 **Enable it the first time:**
 
-1. Install direnv:  
-   - **macOS (Homebrew):** `brew install direnv`  
-   - **Linux:** `apt install direnv` / or your distro’s package.  
+1. Install direnv:
+   - **macOS (Homebrew):** `brew install direnv`
+   - **Linux:** `apt install direnv` / or your distro’s package.
 2. Hook direnv into your shell (add to `~/.bashrc`, `~/.zshrc`, etc.):
 
    ```bash
@@ -47,7 +47,7 @@ After that, every time you `cd` into the repo, Devbox + `.env` load automaticall
 ### The benefit of Devbox + .envrc together
 
 **Automatic, project-scoped environment on `cd`:**  
-You don’t run `devbox shell` or `nvm use` manually. Enter the repo → direnv runs `.envrc` → Devbox tools (Bun, AWS CLI, etc.) and optional `.env` are active. Leave the directory → they’re unloaded. Same setup for everyone who runs `direnv allow`.
+You don’t run `devbox shell` or `nvm use` manually. Enter the repo → direnv runs `.envrc` → Devbox tools and the optional `.env` are active. Leave the directory → they’re unloaded. Same setup for everyone who runs `direnv allow`.
 
 ---
 
@@ -89,12 +89,14 @@ bun run start    # serve the production build
 
 ## Stack overview
 
-### shadcn/ui
+Deliberately small: Next.js, Tailwind and one Markdown parser. The site pulled in
+a full shadcn/ui component library that nothing rendered — 63 components and
+~20 packages — so it was removed. `components.json` went with it; if a component
+is ever needed, `bunx shadcn@latest init` followed by `add <component>` brings
+back only that one.
 
-[shadcn/ui](https://ui.shadcn.com/) is a collection of reusable components (buttons, dialogs, forms, etc.) that you copy into your repo and own the code. It’s not an npm component library; it’s built on **Radix UI** and styled with **Tailwind**.
-
-- Docs: [ui.shadcn.com](https://ui.shadcn.com)
-- This project: components live under `portfolio/components/ui/` and are customized there.
+Runtime dependencies are `next`, `react`, `react-dom`, `gray-matter` and two
+Font Awesome icon packs used by the Open Graph image. That is the whole list.
 
 ### Next.js (basics)
 
@@ -107,9 +109,32 @@ Docs: [nextjs.org/docs](https://nextjs.org/docs)
 
 ### Tailwind CSS
 
-Utility-first CSS: use classes like `flex`, `gap-4`, `text-lg` in JSX. Config in `tailwind.config.*` (or Tailwind v4 in `postcss.config` / `globals.css`). The project uses Tailwind for layout and styling; shadcn components are built on top of it.
+Utility-first CSS: use classes like `flex`, `gap-4`, `text-lg` in JSX. Config in `tailwind.config.*` (or Tailwind v4 in `postcss.config` / `globals.css`). Tailwind v4 is configured entirely in `portfolio/app/globals.css` — there is no `tailwind.config.*`. The design tokens and the keyframes live there too.
 
 Docs: [tailwindcss.com/docs](https://tailwindcss.com/docs)
+
+---
+
+## Checks
+
+Every one of these runs in CI on pull requests and on `master`
+(`.github/workflows/ci.yml`), and each is a script in `portfolio/package.json`:
+
+```bash
+bun run format:check   # prettier, 100 columns
+bun run lint           # eslint, next/core-web-vitals + typescript
+bun run typecheck      # tsc --noEmit
+bun run test           # vitest — the content pipeline
+bun run build          # also validates every content file
+```
+
+`bun run format` writes instead of checking, and `bun run test:watch` re-runs on
+change.
+
+The build is a real check, not just a compile: the content loaders throw on a
+missing `title`, a duplicate slug, a slug that is not lowercase-hyphenated, or
+frontmatter that does not parse — so a typo in a Markdown file fails the build
+rather than shipping a card with a blank heading.
 
 ---
 
@@ -118,27 +143,42 @@ Docs: [tailwindcss.com/docs](https://tailwindcss.com/docs)
 The site is the Personal Page design implemented with the App Router.
 
 - **Routes** — `/` (home), `/resume`, `/projects`, `/blog`, plus a page per entry at
-  `/projects/<slug>` and `/blog/<slug>`. Each sub-page is a server component that exports
-  metadata and renders a client `view.tsx`.
+  `/projects/<slug>` and `/blog/<slug>`. `sitemap.xml` and `robots.txt` are generated from
+  the content folders, and `not-found.tsx` / `error.tsx` cover the failure paths.
 - **Content** — projects and blog posts are Markdown files, one per entry, in
   `portfolio/content/projects/` and `portfolio/content/blog/`. Dropping a file in either
   folder adds an entry and its own page; see `portfolio/content/README.md` for the format.
   The remaining copy — navigation, résumé, page intros — lives in `portfolio/lib/content.ts`.
   The site is English only.
 - **Server components** — only the header (active-link highlight) and the contact form need
-  the client. Every page and view is a server component.
-- **Theme** — light only. `color-scheme: light` is pinned in `globals.css`, and the `dark:`
-  variant stays scoped to a `.dark` ancestor that nothing sets, so a visitor whose OS
-  prefers dark still gets the light design.
+  the client. Every page and view is a server component, so almost nothing ships as JS.
+- **Theme** — light only. `color-scheme: light` is pinned in `globals.css`, so a visitor
+  whose OS prefers dark still gets the light design.
 - **Design tokens** — `--bg`, `--surface`, `--line`, `--ink`, `--dim` and `--brand` are
   defined in `portfolio/app/globals.css` and exposed to Tailwind as `bg-bg`, `border-line`,
-  `text-dim`, `text-brand` and so on. The shadcn tokens are untouched next to them.
+  `text-dim`, `text-brand` and so on.
 - **Images** — `ImageSlot` (`portfolio/app/_components/image-slot.tsx`) renders a labelled
   placeholder until a picture exists, so a page is never broken while pictures are still
   missing. Project and post pictures are best kept in `assets/` at the repo root and
   referenced as `gh:<path>`, which serves them from GitHub instead of shipping them in the
   deploy — see `assets/README.md`. Files in `portfolio/public/` and plain remote URLs work
   too; `images.remotePatterns` in `portfolio/next.config.ts` lists the hosts allowed.
+- **Headers** — `next.config.ts` sets a Content-Security-Policy plus HSTS, `nosniff`,
+  `X-Frame-Options`, `Referrer-Policy`, `Permissions-Policy` and COOP, and disables the
+  `X-Powered-By` header.
+- **Share previews** — every URL has its own Open Graph image. One template in
+  `app/_og/card.tsx` is rendered per route by an `opengraph-image.tsx`, so a link to a
+  project or a post previews with that entry's own title, subtitle and tags rather than a
+  generic site card. Twitter cards come from the same images.
+- **SEO** — per-route canonical URLs, `article` Open Graph metadata with publish dates on
+  posts, and schema.org JSON-LD from `app/_components/structured-data.tsx`: a `Person` graph
+  built from the résumé data (`hasOccupation`, `alumniOf`, `hasCredential`), plus
+  `BlogPosting` / `CreativeWork` and `BreadcrumbList` on detail pages.
+- **Feed** — `/blog/rss.xml`, generated from the same loader as the pages and linked from
+  the `<head>` of every page. The XML is built by `lib/feed.ts` so it can be unit tested.
+- **Icons and manifest** — `/icon`, `/apple-icon` and `/manifest.webmanifest` are generated
+  at build time, so there are no binary icons to keep in sync.
+- **`/.well-known/security.txt`** — RFC 9116, with an `Expires` one year from each build.
 
 ---
 

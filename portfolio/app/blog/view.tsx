@@ -15,7 +15,13 @@ export default function BlogView({ posts }: { posts: Post[] }) {
             href={`/blog/${post.slug}`}
             className="grid gap-6 border-b border-line py-6 transition-colors hover:bg-surface sm:[grid-template-columns:110px_1fr]"
           >
-            <span className="font-mono text-xs text-dim">{post.dateLabel}</span>
+            {post.date ? (
+              <time dateTime={post.date} className="font-mono text-xs text-dim">
+                {post.dateLabel}
+              </time>
+            ) : (
+              <span className="font-mono text-xs text-dim">{post.dateLabel}</span>
+            )}
             <div className="flex flex-col gap-2">
               <h2 className="text-xl font-semibold tracking-[-0.02em]">{post.title}</h2>
               <p className="max-w-[60ch] text-[15px] leading-relaxed text-dim text-pretty">
