@@ -126,10 +126,21 @@ bun run lint           # eslint, next/core-web-vitals + typescript
 bun run typecheck      # tsc --noEmit
 bun run test           # vitest — the content pipeline
 bun run build          # also validates every content file
+bun run test:a11y      # axe-core over every route, in a real browser
+bun run test:lh        # Lighthouse budgets
 ```
 
 `bun run format` writes instead of checking, and `bun run test:watch` re-runs on
-change.
+change. The last two need a browser: `bunx playwright install chromium` once.
+
+`test:a11y` runs axe-core against the production build on every route, with
+`prefers-reduced-motion` emulated so it samples the settled page rather than a
+half-finished fade-in. It also walks the keyboard path to the skip link.
+
+`test:lh` asserts a budget rather than just reporting a score: 100 for
+accessibility, best-practices and SEO, at least 0.98 for performance, plus caps
+on LCP, CLS, TBT and total page weight. The site currently scores 100 in all
+four categories on every route.
 
 The build is a real check, not just a compile: the content loaders throw on a
 missing `title`, a duplicate slug, a slug that is not lowercase-hyphenated, or
@@ -176,6 +187,12 @@ The site is the Personal Page design implemented with the App Router.
   `BlogPosting` / `CreativeWork` and `BreadcrumbList` on detail pages.
 - **Feed** — `/blog/rss.xml`, generated from the same loader as the pages and linked from
   the `<head>` of every page. The XML is built by `lib/feed.ts` so it can be unit tested.
+- **Markdown** — project and post bodies are real Markdown, rendered by `lib/markdown.ts`:
+  headings (with deep-linkable ids), lists, tables, blockquotes, emphasis, links and fenced
+  code blocks highlighted at build time by Shiki, so no highlighter reaches the browser.
+  A picture on its own line becomes a `next/image` figure instead of a bare `img`.
+- **Résumé PDF** — `/resume/jonas-goetz-cv.pdf`, rendered from the same `lib/content.ts`
+  data as the page by `lib/resume-pdf.tsx`, so the file cannot drift from the site.
 - **Icons and manifest** — `/icon`, `/apple-icon` and `/manifest.webmanifest` are generated
   at build time, so there are no binary icons to keep in sync.
 - **`/.well-known/security.txt`** — RFC 9116, with an `Expires` one year from each build.
@@ -190,7 +207,13 @@ Convert images to AVIF for faster loading. From the `image-optimizer/` folder ru
 ./convert.sh
 ```
 
-Output is written to `image-optimizer/output/`. Copy the generated `.avif` files into `portfolio/public/` as needed.
+Output is written to `image-optimizer/output/`. To convert everything under `assets/` in place instead:
+
+```bash
+./image-optimizer/convert.sh ../assets
+```
+
+Pass `--replace` to delete each source once converted. **This is automated**: pushing an image to `assets/` on `master` triggers `.github/workflows/images.yml`, which converts it to AVIF and commits the result — so a picture uploaded through the GitHub web UI ends up in the right format without a local checkout.
 
 ---
 

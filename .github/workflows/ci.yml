@@ -49,3 +49,37 @@ jobs:
       # since the loaders throw during the build.
       - name: Build
         run: bun run build
+
+  # Both audits need a browser and a production build, so they run separately
+  # from the fast checks above rather than slowing every one of them down.
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: portfolio/package.json
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      - name: Install Chromium
+        run: bunx playwright install --with-deps chromium
+
+      # axe-core over every route, plus the keyboard path to the skip link.
+      - name: Accessibility
+        run: bun run test:a11y
+
+      - name: Upload accessibility report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: portfolio/playwright-report
+          retention-days: 7
+
+      # Performance, accessibility, best-practices and SEO budgets.
+      - name: Lighthouse
+        run: bun run test:lh

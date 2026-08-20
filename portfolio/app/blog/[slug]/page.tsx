@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import PostView from "./view";
-import { getPost, getPosts } from "@/lib/blog";
+import { getPost, getPostNeighbours, getPosts } from "@/lib/blog";
+import { renderMarkdown } from "@/lib/markdown";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -37,5 +38,7 @@ export default async function PostPage({ params }: Params) {
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) notFound();
-  return <PostView post={post} />;
+
+  const blocks = await renderMarkdown(post.body, post.title, post.slug);
+  return <PostView post={post} blocks={blocks} neighbours={getPostNeighbours(post.slug)} />;
 }

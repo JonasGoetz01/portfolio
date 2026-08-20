@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import ProjectDetailView from "./view";
+import { renderMarkdown } from "@/lib/markdown";
 import { getProject, getProjects } from "@/lib/projects";
 
 type Params = { params: Promise<{ slug: string }> };
@@ -37,5 +38,7 @@ export default async function ProjectDetailPage({ params }: Params) {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();
-  return <ProjectDetailView project={project} />;
+
+  const blocks = await renderMarkdown(project.body, project.title, project.slug);
+  return <ProjectDetailView project={project} blocks={blocks} />;
 }

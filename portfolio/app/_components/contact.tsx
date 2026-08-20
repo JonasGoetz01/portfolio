@@ -1,8 +1,4 @@
-"use client";
-
-import { useState, type FormEvent } from "react";
-
-import { content, EMAIL, GITHUB, LINKEDIN } from "@/lib/content";
+import { EMAIL, GITHUB, LINKEDIN, content } from "@/lib/content";
 
 const LINKS = [
   { href: `mailto:${EMAIL}`, label: EMAIL, external: false },
@@ -10,96 +6,33 @@ const LINKS = [
   { href: LINKEDIN, label: "linkedin.com/in/jonasgoetz01", external: true },
 ];
 
-const FIELD_CLASS =
-  "rounded-md border border-line bg-surface px-[13px] py-[11px] text-[14.5px] text-ink outline-none placeholder:text-dim focus:border-brand";
-
+/**
+ * There is no form here on purpose. The site has no backend, and a form that
+ * hands the message to the visitor's mail client fails silently for anyone
+ * without one configured — the message is simply lost. Three plain links always
+ * work, and this stays a server component.
+ */
 export default function Contact() {
-  const [name, setName] = useState("");
-  const [mail, setMail] = useState("");
-  const [message, setMessage] = useState("");
-
-  // No backend on this site: the form hands the message to the visitor's mail
-  // client, pre-filled.
-  function submit(event: FormEvent) {
-    event.preventDefault();
-    const subject = encodeURIComponent(`${content.contact.subject} ${name || "website"}`);
-    const body = encodeURIComponent(`${message}\n\n${mail}`);
-    window.location.href = `mailto:${EMAIL}?subject=${subject}&body=${body}`;
-  }
-
   return (
     <>
       <section id="contact" className="mt-20 border-t border-line pt-11">
-        <div className="grid gap-11 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
-          <div className="flex flex-col gap-[14px]">
-            <h2 className="text-[26px] font-semibold tracking-[-0.02em]">
-              {content.contact.title}
-            </h2>
-            <p className="max-w-[36ch] text-[15px] leading-relaxed text-dim">
-              {content.contact.intro}
-            </p>
-            <div className="mt-[6px] flex flex-col gap-[7px] font-mono text-[13px]">
-              {LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  {...(link.external ? { target: "_blank", rel: "noreferrer" } : {})}
-                  className="w-fit text-brand transition-colors hover:text-ink"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
+        <div className="flex flex-col gap-[14px]">
+          <h2 className="text-[26px] font-semibold tracking-[-0.02em]">{content.contact.title}</h2>
+          <p className="max-w-[42ch] text-[15px] leading-relaxed text-dim">
+            {content.contact.intro}
+          </p>
+          <div className="mt-2 flex flex-wrap gap-x-7 gap-y-2 font-mono text-[13px]">
+            {LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                {...(link.external ? { target: "_blank", rel: "noreferrer noopener" } : {})}
+                className="text-brand transition-colors hover:text-ink"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
-
-          <form className="flex flex-col gap-[10px]" onSubmit={submit}>
-            <label htmlFor="contact-name" className="sr-only">
-              {content.contact.name}
-            </label>
-            <input
-              id="contact-name"
-              name="name"
-              autoComplete="name"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder={content.contact.name}
-              className={FIELD_CLASS}
-            />
-
-            <label htmlFor="contact-mail" className="sr-only">
-              {content.contact.mail}
-            </label>
-            <input
-              id="contact-mail"
-              name="email"
-              type="email"
-              autoComplete="email"
-              value={mail}
-              onChange={(event) => setMail(event.target.value)}
-              placeholder={content.contact.mail}
-              className={FIELD_CLASS}
-            />
-
-            <label htmlFor="contact-message" className="sr-only">
-              {content.contact.message}
-            </label>
-            <textarea
-              id="contact-message"
-              name="message"
-              required
-              value={message}
-              onChange={(event) => setMessage(event.target.value)}
-              placeholder={content.contact.message}
-              rows={4}
-              className={`${FIELD_CLASS} resize-y`}
-            />
-            <button
-              type="submit"
-              className="cursor-pointer self-start rounded-md bg-brand px-5 py-[11px] font-mono text-[12.5px] tracking-[0.03em] text-bg transition-opacity hover:opacity-85"
-            >
-              {content.contact.send}
-            </button>
-          </form>
         </div>
       </section>
       <footer className="mt-14 font-mono text-[11px] text-dim">{content.footer}</footer>

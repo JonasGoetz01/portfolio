@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { resolveSrc, str, requireStr, toBlocks, toImage, toImages, toList } from "./content-files";
+import { resolveSrc, requireStr, str, toImage, toImages, toList } from "./content-files";
 
 describe("resolveSrc", () => {
   it("expands the gh: shorthand to a raw.githubusercontent URL under assets/", () => {
@@ -17,40 +17,6 @@ describe("resolveSrc", () => {
   it("leaves local paths and absolute URLs untouched", () => {
     expect(resolveSrc("/jonas.avif")).toBe("/jonas.avif");
     expect(resolveSrc("https://example.com/a.png")).toBe("https://example.com/a.png");
-  });
-});
-
-describe("toBlocks", () => {
-  it("splits on blank lines and joins wrapped lines into one paragraph", () => {
-    const blocks = toBlocks("One line\nstill one.\n\nTwo.", "alt", "k");
-    expect(blocks).toHaveLength(2);
-    expect(blocks[0]).toMatchObject({ kind: "text", text: "One line still one." });
-    expect(blocks[1]).toMatchObject({ kind: "text", text: "Two." });
-  });
-
-  it("turns an image-only paragraph into an image block and resolves gh:", () => {
-    const [block] = toBlocks("![The rack](gh:blog/x/rack.avif)", "fallback", "k");
-    expect(block).toMatchObject({ kind: "image", alt: "The rack" });
-    expect(block).toHaveProperty("src", expect.stringContaining("/assets/blog/x/rack.avif"));
-  });
-
-  it("falls back to the entry title when the image has no alt text", () => {
-    const [block] = toBlocks("![](/a.png)", "Entry title", "k");
-    expect(block).toMatchObject({ kind: "image", alt: "Entry title" });
-  });
-
-  it("does not treat a paragraph that merely contains an image as an image block", () => {
-    const [block] = toBlocks("Text ![a](/a.png) more text", "alt", "k");
-    expect(block.kind).toBe("text");
-  });
-
-  it("gives every block a distinct key even when the text repeats", () => {
-    const blocks = toBlocks("Same.\n\nSame.", "alt", "k");
-    expect(new Set(blocks.map((b) => b.id)).size).toBe(2);
-  });
-
-  it("ignores whitespace-only input", () => {
-    expect(toBlocks("\n\n   \n", "alt", "k")).toEqual([]);
   });
 });
 

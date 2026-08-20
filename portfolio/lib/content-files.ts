@@ -42,14 +42,6 @@ export function resolveSrc(src: string): string {
 
 export type ContentImage = { src: string; alt: string };
 
-/**
- * A piece of body text: either a paragraph or a picture on its own line.
- * `id` exists only to give React a stable key, since two paragraphs can hold
- * the same text.
- */
-export type Block =
-  { id: string; kind: "text"; text: string } | ({ id: string; kind: "image" } & ContentImage);
-
 /** Coerce a frontmatter value that may be a string, a list, or missing. */
 export function toList(value: unknown): string[] {
   if (Array.isArray(value)) return value.map((item) => String(item).trim()).filter(Boolean);
@@ -81,36 +73,6 @@ export function toImages(value: unknown, fallbackAlt: string): ContentImage[] {
   return raw
     .map((entry) => toImage(entry, fallbackAlt))
     .filter((entry): entry is ContentImage => Boolean(entry));
-}
-
-/** A paragraph that is nothing but a Markdown image becomes a picture block. */
-const IMAGE_ONLY = /^!\[([^\]]*)\]\(([^)\s]+)(?:\s+"[^"]*")?\)$/;
-
-/**
- * Split body text into blocks. Blank lines separate paragraphs; a single
- * newline inside a paragraph is just a line wrap, so lines can stay short in
- * the file. A paragraph holding only `![alt](src)` renders as an image, which
- * is how pictures get placed between paragraphs.
- */
-export function toBlocks(body: string, fallbackAlt: string, keyPrefix: string): Block[] {
-  return body
-    .split(/\n\s*\n/)
-    .map((chunk) => chunk.replace(/\s*\n\s*/g, " ").trim())
-    .filter(Boolean)
-    .map((chunk, index): Block => {
-      const id = `${keyPrefix}-${index}`;
-      const image = IMAGE_ONLY.exec(chunk);
-      if (image) {
-        const [, alt, src] = image;
-        return {
-          id,
-          kind: "image",
-          src: resolveSrc(src),
-          alt: alt.trim() || fallbackAlt,
-        };
-      }
-      return { id, kind: "text", text: chunk };
-    });
 }
 
 /** Read an optional string field from frontmatter, or "" when it is missing. */

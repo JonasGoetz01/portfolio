@@ -49,6 +49,8 @@ export type SiteContent = {
     experience: string;
     education: string;
     skills: string;
+    /** Label for the PDF download link. */
+    download: string;
     certLabel: string;
     certs: string[];
   };
@@ -71,15 +73,7 @@ export type SiteContent = {
     /** Heading above a post's extra images. */
     gallery: string;
   };
-  contact: {
-    title: string;
-    intro: string;
-    name: string;
-    mail: string;
-    message: string;
-    send: string;
-    subject: string;
-  };
+  contact: { title: string; intro: string };
   footer: string;
 };
 
@@ -158,6 +152,7 @@ export const content: SiteContent = {
     experience: "EXPERIENCE",
     education: "EDUCATION",
     skills: "SKILLS",
+    download: "Download PDF",
     certLabel: "Certifications",
     certs: [
       "Juleica (youth group leader card)",
@@ -305,11 +300,6 @@ export const content: SiteContent = {
   contact: {
     title: "Say hello.",
     intro: "For ideas, questions or suggestions.",
-    name: "Name",
-    mail: "Email",
-    message: "Message",
-    send: "SEND",
-    subject: "Message from",
   },
   footer: "© 2026 Jonas Götz — Heilbronn, Germany",
 };

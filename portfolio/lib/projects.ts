@@ -12,13 +12,12 @@ import {
   readContentDir,
   requireStr,
   str,
-  toBlocks,
   toImage,
   toImages,
   toList,
-  type Block,
   type ContentImage,
 } from "@/lib/content-files";
+import { readingMinutes } from "@/lib/markdown";
 
 export type Project = {
   /** Filename without the extension; also the detail-page URL. */
@@ -33,8 +32,10 @@ export type Project = {
   stack: string[];
   hero?: ContentImage;
   images: ContentImage[];
-  /** The detail-page body: paragraphs and any pictures placed between them. */
-  detail: Block[];
+  /** The raw Markdown body. Rendered by the detail page via `renderMarkdown`. */
+  body: string;
+  /** Whole minutes at 200 wpm, from the body's prose. */
+  readingMinutes: number;
 };
 
 /** Every project in `content/projects/`, in display order. */
@@ -51,7 +52,8 @@ export function getProjects(): Project[] {
         stack: toList(data.stack),
         hero: toImage(data.hero, title),
         images: toImages(data.images, title),
-        detail: toBlocks(body, title, slug),
+        body,
+        readingMinutes: readingMinutes(body),
       };
     })
     .sort((a, b) => a.order - b.order || a.slug.localeCompare(b.slug));
