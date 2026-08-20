@@ -48,16 +48,73 @@ test("the header nav stays on one row on a narrow phone", async ({ page }) => {
   expect(new Set(tops).size).toBe(1);
 });
 
-test("the hero portrait fills the column on a phone and is inset on desktop", async ({ page }) => {
+test("the hero portrait sits beside the name on a phone", async ({ page }) => {
   await page.goto("/");
   const portrait = page.locator("section").first().locator("img");
+  const name = page.locator("h1");
 
-  const narrow = await portrait.boundingBox();
-  const main = await page.locator("main").boundingBox();
-  // Within the page gutter: the frame spans the column rather than dangling.
-  expect(narrow!.width).toBeGreaterThan(main!.width - 45);
+  const [img, heading] = [await portrait.boundingBox(), await name.boundingBox()];
+  // Same row: the picture starts left of the name and overlaps it vertically.
+  expect(img!.x + img!.width).toBeLessThanOrEqual(heading!.x + 1);
+  expect(img!.y).toBeLessThan(heading!.y + heading!.height);
+  expect(img!.y + img!.height).toBeGreaterThan(heading!.y);
 
+  // A compact square, not a band across the column.
+  expect(Math.abs(img!.width - img!.height)).toBeLessThan(2);
+  expect(img!.width).toBeLessThan(120);
+});
+
+test("the hero portrait moves to the right of the prose on desktop", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  const wide = await portrait.boundingBox();
-  expect(wide!.width).toBeLessThan(400);
+  await page.goto("/");
+  const img = (await page.locator("section").first().locator("img").boundingBox())!;
+  const prose = (await page.locator("section").first().locator("p").first().boundingBox())!;
+
+  expect(img.x).toBeGreaterThan(prose.x + prose.width);
+  // The tall inset frame, close to the source photo's own 3:4 ratio.
+  expect(img.height).toBeGreaterThan(img.width);
+});
+
+test("the portrait is fetched once, not once per layout", async ({ page }) => {
+  const requests: string[] = [];
+  page.on("request", (r) => {
+    if (r.resourceType() === "image") requests.push(r.url());
+  });
+  await page.goto("/", { waitUntil: "networkidle" });
+  expect(requests.filter((u) => u.includes("jonas"))).toHaveLength(1);
+});
+
+/**
+ * The picture must be cropped to each frame, never stretched into it. `fill`
+ * plus `object-fit: cover` is what guarantees that: the image keeps its own
+ * proportions and the overflow is clipped. Asserted rather than assumed,
+ * because a stray `object-fill` or a width/height pair would distort the face
+ * and still look plausible in a diff.
+ */
+test("the portrait is cropped to the frame, never stretched", async ({ page }) => {
+  for (const width of [320, 375, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/", { waitUntil: "networkidle" });
+
+    const img = page.locator("section").first().locator("img");
+    await expect(img).toHaveCSS("object-fit", "cover");
+
+    const shape = await img.evaluate((el: HTMLImageElement) => {
+      const box = el.getBoundingClientRect();
+      const t = getComputedStyle(el).transform;
+      // A uniform scale keeps proportions; unequal x/y scaling would not.
+      const m = t === "none" ? null : new DOMMatrixReadOnly(t);
+      return {
+        natural: el.naturalWidth / el.naturalHeight,
+        frame: box.width / box.height,
+        scaleX: m ? m.a : 1,
+        scaleY: m ? m.d : 1,
+      };
+    });
+
+    // The frame may differ from the source's ratio — that is the crop. What must
+    // not differ is the horizontal and vertical scale applied to the pixels.
+    expect(shape.natural).toBeCloseTo(3 / 4, 1);
+    expect(shape.scaleX).toBeCloseTo(shape.scaleY, 5);
+  }
 });

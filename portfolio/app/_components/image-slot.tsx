@@ -51,7 +51,14 @@ export default function ImageSlot({
         fill
         sizes={sizes}
         priority={priority}
-        className={`object-cover${scale ? " img-zoom" : ""}`}
+        /*
+          Written as whole literals, not `\`object-cover${...}\``: Tailwind
+          extracts class names statically from the source text, and a utility
+          sitting immediately before `${` is not recognised — which silently left
+          every picture on `object-fit: fill`, stretching it into its frame
+          instead of cropping. tests/mobile.spec.ts now guards this.
+        */
+        className={scale ? "object-cover img-zoom" : "object-cover"}
         style={
           scale
             ? ({

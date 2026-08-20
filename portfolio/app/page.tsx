@@ -9,40 +9,48 @@ export default function Home() {
     <>
       {/* ---------------------------------- Hero --------------------------------- */}
       <section className="animate-rise pb-2 pt-9 sm:pt-[72px]">
-        <div className="flex flex-col gap-8 sm:flex-row sm:flex-wrap sm:items-start sm:gap-11">
-          <div className="flex flex-col gap-[22px] sm:flex-1 sm:basis-[340px]">
-            <div className="flex flex-col gap-[10px]">
-              <span className="font-mono text-xs tracking-[0.06em] text-brand">
-                {content.hero.eyebrow}
-                <span className="animate-caret ml-[3px] inline-block">_</span>
-              </span>
-              <h1 className="text-[clamp(34px,9vw,56px)] font-semibold leading-[1.02] tracking-[-0.03em] break-words">
-                {content.hero.name}
-              </h1>
-            </div>
-            <div className="flex max-w-[46ch] flex-col gap-4">
-              <p className="text-[17px] leading-[1.65] text-pretty">{content.hero.paragraphs[0]}</p>
-              <p className="text-[17px] leading-[1.65] text-dim text-pretty">
-                {content.hero.paragraphs[1]}
-              </p>
-            </div>
-          </div>
+        {/*
+          One grid, two layouts, one image element — so the picture is fetched
+          once. On a phone it reads as an identity block: a square portrait
+          beside the eyebrow and the name, with the prose spanning underneath.
+          From `sm` up it returns to the original arrangement, text on the left
+          and the tall portrait inset on the right.
+
+          Grid rather than flex because the picture has to move between rows and
+          columns, which no amount of wrapping or ordering achieves.
+        */}
+        <div className="grid grid-cols-[88px_1fr] items-start gap-x-[18px] gap-y-7 min-[360px]:grid-cols-[104px_1fr] min-[360px]:gap-x-5 sm:grid-cols-[1fr_230px] sm:gap-x-11 sm:gap-y-[22px]">
           {/*
-            The source is 3024x4032 — a 3:4 portrait. The phone frame keeps a
-            portrait aspect so the picture is barely cropped; a landscape frame
-            here threw away most of its height. Centred and capped rather than
-            edge to edge, so it reads as deliberate at any column width.
-            The narrow desktop frame is tighter, hence the second scale.
+            The source is a 3:4 portrait. Square on a phone, cropped to the
+            face, which is what a portrait at this size wants; the tall desktop
+            frame is nearly the source's own ratio.
           */}
           <ImageSlot
             src={PORTRAIT}
             hint={content.hero.portraitAlt}
-            className="mx-auto aspect-[4/5] w-full max-w-[320px] sm:mx-0 sm:aspect-auto sm:h-[290px] sm:w-[230px] sm:max-w-none"
-            sizes="(max-width: 640px) 320px, 230px"
-            scale={1.22}
+            className="col-start-1 row-start-1 aspect-square w-[88px] rounded-lg min-[360px]:w-[104px] sm:col-start-2 sm:row-span-2 sm:row-start-1 sm:aspect-auto sm:h-[290px] sm:w-[230px] sm:rounded-md"
+            sizes="(max-width: 640px) 104px, 230px"
+            scale={1.34}
             scaleSm={1.46}
             priority
           />
+
+          <div className="col-start-2 row-start-1 flex flex-col gap-[10px] self-center sm:col-start-1 sm:self-start">
+            <span className="font-mono text-[11px] tracking-[0.05em] text-brand sm:text-xs sm:tracking-[0.06em]">
+              {content.hero.eyebrow}
+              <span className="animate-caret ml-[3px] inline-block">_</span>
+            </span>
+            <h1 className="text-[clamp(28px,8.5vw,56px)] font-semibold leading-[1.02] tracking-[-0.03em] break-words">
+              {content.hero.name}
+            </h1>
+          </div>
+
+          <div className="col-span-2 row-start-2 flex max-w-[46ch] flex-col gap-4 sm:col-span-1 sm:col-start-1">
+            <p className="text-[17px] leading-[1.65] text-pretty">{content.hero.paragraphs[0]}</p>
+            <p className="text-[17px] leading-[1.65] text-dim text-pretty">
+              {content.hero.paragraphs[1]}
+            </p>
+          </div>
         </div>
       </section>
 
