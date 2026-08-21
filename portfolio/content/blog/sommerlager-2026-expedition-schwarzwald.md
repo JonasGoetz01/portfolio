@@ -3,6 +3,10 @@ date: 2026-08-18
 lang: de
 state: RÜCKBLICK
 
+hero:
+  src: gh:blog/sommerlager2026.avif
+  alt: Das ganze Lager auf der Wiese in Bernau, vor dem selbst gemalten Expeditionsbanner
+
 title: "Sommerlager 2026: Expedition Schwarzwald"
 excerpt: Fünfzehn Tage, 85 Kinder und ein Motto — ein Rückblick auf das Sommerlager in Bernau, aus der Sicht der Leitung.
 ---
