@@ -22,7 +22,7 @@ export default function BlogView({ posts }: { posts: Post[] }) {
             ) : (
               <span className="font-mono text-xs text-dim">{post.dateLabel}</span>
             )}
-            <div className="flex flex-col gap-2">
+            <div lang={post.lang} className="flex flex-col gap-2">
               <h2 className="text-xl font-semibold tracking-[-0.02em]">{post.title}</h2>
               <p className="max-w-[60ch] text-[15px] leading-relaxed text-dim text-pretty">
                 {post.excerpt}

@@ -23,6 +23,12 @@ export type Post = {
   slug: string;
   /** ISO date from frontmatter, used for sorting. Empty if the post has none. */
   date: string;
+  /**
+   * BCP 47 tag when the post is not in the site's language. The site is
+   * English, so a German post has to say so: it lets a screen reader pick the
+   * right voice and the browser hyphenate the long compounds correctly.
+   */
+  lang?: string;
   /** Shown in the date column; falls back to the ISO date. */
   dateLabel: string;
   title: string;
@@ -59,6 +65,7 @@ export function getPosts(): Post[] {
       const post: Post = {
         slug,
         date,
+        lang: str(data, "lang") || undefined,
         dateLabel: str(data, "dateLabel") || date,
         title,
         excerpt: str(data, "excerpt"),

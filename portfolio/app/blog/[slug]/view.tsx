@@ -18,7 +18,7 @@ export default function PostView({
   neighbours: { previous?: PostLink; next?: PostLink };
 }) {
   return (
-    <article className="animate-rise-fast pt-[72px]">
+    <article lang={post.lang} className="animate-rise-fast pt-[72px]">
       <Link
         href="/blog"
         className="mb-7 inline-block font-mono text-[12px] text-dim transition-colors hover:text-ink"
