@@ -17,13 +17,15 @@
 
 const PORT = 3988;
 
+// Kept in step with tests/routes.ts by lib/audit-routes.test.ts — a .cjs file
+// cannot require the TypeScript one, so the list is duplicated and pinned.
 const ROUTES = [
   "/",
   "/resume",
   "/projects",
   "/projects/learning-hub",
   "/blog",
-  "/blog/lms-without-teachers",
+  "/blog/sommerlager-2026-expedition-schwarzwald",
 ];
 
 module.exports = {

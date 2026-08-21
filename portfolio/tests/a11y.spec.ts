@@ -24,6 +24,11 @@ for (const route of ROUTES) {
     const response = await page.goto(route, { waitUntil: "domcontentloaded" });
     expect(response, `${route} did not respond`).not.toBeNull();
 
+    // Without this a route naming a deleted entry still passes: the 404 page
+    // responds, and it is accessible, so axe finds nothing wrong with it.
+    const expected = route === "/does-not-exist" ? 404 : 200;
+    expect(response?.status(), `${route} answered with the wrong status`).toBe(expected);
+
     const { violations } = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
       .analyze();

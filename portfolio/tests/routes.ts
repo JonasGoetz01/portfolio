@@ -8,7 +8,7 @@ export const ROUTES = [
   "/projects",
   "/projects/learning-hub",
   "/blog",
-  "/blog/lms-without-teachers",
+  "/blog/sommerlager-2026-expedition-schwarzwald",
   "/impressum",
   "/datenschutz",
   "/does-not-exist", // the 404 page is a page too
