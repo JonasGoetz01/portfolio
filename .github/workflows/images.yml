@@ -24,15 +24,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install ImageMagick
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends imagemagick
+      # Ubuntu still ships ImageMagick 6, which has no `magick` binary and no
+      # dependable AVIF encoder. Devbox installs the same ImageMagick 7 that
+      # devbox.lock pins for local development, so CI converts identically.
+      - uses: jetify-com/devbox-install-action@v0.15.0
+        with:
+          enable-cache: "true"
 
       # --replace: the source is kept in git history, so the tree only needs
       # the AVIF. Already-converted files are skipped.
       - name: Convert to AVIF
-        run: ./image-optimizer/convert.sh --replace assets
+        run: devbox run -- ./image-optimizer/convert.sh --replace assets
 
       - name: Commit
         run: |
