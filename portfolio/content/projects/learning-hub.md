@@ -8,7 +8,7 @@ hero:
 
 kind: WORK — 42 HEILBRONN
 title: Learning Hub
-subtitle: The intranet 42 Heilbronn runs on — the campus systems a coding school without teachers actually needs, in one place.
+subtitle: The intranet 42 Heilbronn runs on — the campus systems we need, in one place.
 ---
 
 At 42 there is nobody standing at the front of a room. Students unlock projects
