@@ -24,6 +24,11 @@ for (const route of ROUTES) {
     const response = await page.goto(route, { waitUntil: "domcontentloaded" });
     expect(response, `${route} did not respond`).not.toBeNull();
 
+    // Without this a route naming a deleted entry still passes: the 404 page
+    // responds, and it is accessible, so axe finds nothing wrong with it.
+    const expected = route === "/does-not-exist" ? 404 : 200;
+    expect(response?.status(), `${route} answered with the wrong status`).toBe(expected);
+
     const { violations } = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
       .analyze();
@@ -40,6 +45,23 @@ for (const route of ROUTES) {
     expect(violations, `\n${detail}`).toEqual([]);
   });
 }
+
+/**
+ * The admin's sign-in page, which is the one page of it a visitor can reach. It
+ * is kept out of `ROUTES` because that list is also the Lighthouse budget, and a
+ * deliberately `noindex` page cannot pass an SEO budget — but a page with a form
+ * on it is exactly the kind that needs the audit.
+ */
+test("no accessibility violations on /admin/login", async ({ page }) => {
+  await page.goto("/admin/login", { waitUntil: "domcontentloaded" });
+  await expect(page.getByRole("button", { name: /continue with github/i })).toBeVisible();
+
+  const { violations } = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "best-practice"])
+    .analyze();
+
+  expect(violations, `\n${violations.map((violation) => violation.help).join("\n")}`).toEqual([]);
+});
 
 test("the skip link is the first thing a keyboard user reaches", async ({ page }) => {
   await page.goto("/");

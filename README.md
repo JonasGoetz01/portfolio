@@ -170,6 +170,7 @@ The site is the Personal Page design implemented with the App Router.
 - **Content** — projects and blog posts are Markdown files, one per entry, in
   `portfolio/content/projects/` and `portfolio/content/blog/`. Dropping a file in either
   folder adds an entry and its own page; see `portfolio/content/README.md` for the format.
+  They can also be written at [`/admin`](#admin) instead of by hand.
   The remaining copy — navigation, résumé, page intros — lives in `portfolio/lib/content.ts`.
   The site is English only.
 - **Server components** — only the header (active-link highlight) and the contact form need
@@ -207,6 +208,80 @@ The site is the Personal Page design implemented with the App Router.
 - **Icons and manifest** — `/icon`, `/apple-icon` and `/manifest.webmanifest` are generated
   at build time, so there are no binary icons to keep in sync.
 - **`/.well-known/security.txt`** — RFC 9116, with an `Expires` one year from each build.
+
+---
+
+## Admin
+
+`/admin` is an editor for the two content folders. It writes the same Markdown
+files, in the same house style, and every save is a **commit on `master` made as
+the signed-in GitHub user** — so the site rebuilds itself and the history shows
+who wrote the post. There is no database and no second copy of the content: the
+repository stays the only source of truth, and hand-editing a file keeps working
+exactly as before.
+
+What it does:
+
+- **Posts and projects** — create, edit, rename and delete. The form fields are
+  generated from `portfolio/lib/admin/spec.ts`, which is the same list of
+  frontmatter fields the two `content/*/README.md` files document. Frontmatter
+  keys the editor does not know about are read and written back untouched.
+- **Pictures** — pick a file and it is converted to AVIF _before_ it is
+  committed, at the same quality `image-optimizer/convert.sh` uses, and lands in
+  `assets/<folder>/<entry>/<name>.avif`. The frontmatter gets the `gh:` path. So
+  `images.yml` has nothing left to convert, and camera metadata never reaches the
+  repository.
+- **Drafts** — the "keep it off the site" checkbox saves the file as
+  `_<name>.md`, which is the documented way to keep an entry in the repository
+  without it appearing on the site.
+- **Collisions** — a save carries the blob SHA it was loaded from, so an edit made
+  from a second tab (or by hand, or by the images workflow) is refused with an
+  explanation rather than silently overwritten.
+
+What it deliberately does not do: it has no preview (the site is the preview, one
+deploy later), and renaming an entry takes two commits, because the GitHub
+contents API has no move.
+
+### Setting it up
+
+The admin stays switched off until it is configured — `/admin` then says which
+variables are missing and nothing else. It needs a **GitHub OAuth app** (Settings
+→ Developer settings → OAuth Apps → New):
+
+| Field                      | Value                                  |
+| -------------------------- | -------------------------------------- |
+| Homepage URL               | `https://goetz.sh`                     |
+| Authorization callback URL | `https://goetz.sh/admin/auth/callback` |
+
+An OAuth app has exactly one callback URL, so local development needs its own app
+with `http://localhost:3000/admin/auth/callback`. Then set these on the Railway
+service (and in `.env` for local development):
+
+| Variable                     | Notes                                                                                                           |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `ADMIN_GITHUB_CLIENT_ID`     | From the OAuth app.                                                                                             |
+| `ADMIN_GITHUB_CLIENT_SECRET` | From the OAuth app. Generate it there; it is shown once.                                                        |
+| `ADMIN_SESSION_SECRET`       | At least 32 characters — the session cookie is encrypted with a key derived from it. `openssl rand -base64 48`. |
+| `ADMIN_GITHUB_LOGINS`        | Comma-separated GitHub logins allowed to sign in, e.g. `JonasGoetz01`. Everyone else is refused after GitHub.   |
+| `ADMIN_GITHUB_SCOPE`         | Optional. `public_repo` by default, which is all this public repository needs. A private one needs `repo`.      |
+| `ADMIN_OAUTH_REDIRECT_URI`   | Optional. The callback URL is derived from the request; set this only where that is wrong.                      |
+
+One more, not admin-specific but worth setting now that the site has Server
+Actions: `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY`. Next derives Server Action ids
+per build unless it is given a stable key, and saving in the admin triggers a
+redeploy — so an editor tab left open across one can find that its Save button
+no longer resolves to anything (`Failed to find Server Action`). Any stable
+random value fixes it, and it is required rather than optional if the service
+ever runs more than one replica.
+
+Rotating `ADMIN_SESSION_SECRET` signs everyone out, which is the whole recovery
+procedure. Removing a login from `ADMIN_GITHUB_LOGINS` stops the next sign-in but
+not a session already open — rotate the secret as well to end those.
+
+Signing in is the only way in: the allowlist is checked against the login GitHub
+reports for the token, and every page, route and action re-reads the session
+before it touches the repository. `/admin` is `noindex` both in `robots.txt` and
+as a header, and is excluded from the sitemap.
 
 ---
 

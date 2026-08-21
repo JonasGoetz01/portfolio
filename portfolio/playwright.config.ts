@@ -22,6 +22,18 @@ export default defineConfig({
     // the wrong reason.
     reuseExistingServer: false,
     timeout: 180_000,
-    env: { PORT: String(PORT) },
+    /**
+     * The admin variables are here so `/admin/login` renders its sign-in form
+     * for the audit rather than the "not configured" notice. They are deliberate
+     * nonsense: nothing in the suite signs in, and an OAuth app that does not
+     * exist cannot be reached even if something tried.
+     */
+    env: {
+      PORT: String(PORT),
+      ADMIN_GITHUB_CLIENT_ID: "audit",
+      ADMIN_GITHUB_CLIENT_SECRET: "audit",
+      ADMIN_SESSION_SECRET: "audit".repeat(8),
+      ADMIN_GITHUB_LOGINS: "nobody",
+    },
   },
 });

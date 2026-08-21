@@ -46,6 +46,20 @@ const nextConfig: NextConfig = {
   // Nothing gains from advertising the framework version.
   poweredByHeader: false,
 
+  experimental: {
+    /**
+     * Server Actions accept a 1 MB body by default, and the admin's picture
+     * upload is a Server Action — a photo on its way to being converted to AVIF
+     * is many times that.
+     *
+     * A megabyte above `MAX_UPLOAD_BYTES` in `lib/admin/images.ts` on purpose.
+     * This limit counts the raw request body, multipart boundaries and part
+     * headers included, so a file exactly on the upload limit would be rejected
+     * here as a 413 before the upload check could say what was wrong.
+     */
+    serverActions: { bodySizeLimit: "26mb" },
+  },
+
   images: {
     /**
      * Project and post pictures may either be committed to `public/` or hosted
@@ -70,6 +84,15 @@ const nextConfig: NextConfig = {
 
   async headers() {
     return [
+      {
+        /**
+         * The admin is not part of the site: it is behind a GitHub sign-in and
+         * has nothing worth indexing. `robots.ts` disallows it too — this is the
+         * half that also covers a crawler arriving at a page directly.
+         */
+        source: "/admin/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      },
       {
         source: "/:path*",
         headers: [

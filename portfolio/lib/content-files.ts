@@ -26,10 +26,10 @@ import matter from "gray-matter";
  * paths under `public/`. See `images.remotePatterns` in next.config.ts for the
  * hosts next/image is allowed to fetch from.
  */
-const GITHUB_REPO = "JonasGoetz01/portfolio";
-const GITHUB_BRANCH = "master";
-const GITHUB_ASSET_DIR = "assets";
-const GITHUB_PREFIX = "gh:";
+export const GITHUB_REPO = "JonasGoetz01/portfolio";
+export const GITHUB_BRANCH = "master";
+export const GITHUB_ASSET_DIR = "assets";
+export const GITHUB_PREFIX = "gh:";
 
 const RAW_BASE = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${GITHUB_ASSET_DIR}`;
 
