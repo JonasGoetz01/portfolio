@@ -11,6 +11,12 @@ Drop a `.md` file into either folder and it appears — no code changes. The
 filename is the URL. Files named `README.md`, or starting with `_` or `.`, are
 ignored, so notes and drafts-in-progress can sit next to real entries.
 
+The same files can be written at `/admin` instead of by hand — it commits exactly
+this format, converts pictures to AVIF on the way in, and leaves frontmatter it
+does not manage alone. See the Admin section of the root `README.md`. Nothing
+here changes either way: a file written by hand and a file written there are the
+same file.
+
 The rest of the site's copy — navigation, the résumé, page intros — stays in
 `portfolio/lib/content.ts`.
 
