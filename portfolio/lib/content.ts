@@ -23,6 +23,16 @@ export type Education = {
   bullets?: string[];
 };
 
+/** An event, not a job — kept apart from `jobs` so the experience stays employment only. */
+export type Hackathon = {
+  period: string;
+  place: string;
+  name: string;
+  role: string;
+  url?: string;
+  bullets?: string[];
+};
+
 export type StackLayer = { n: string; title: string; note: string };
 
 export type NowItem = { tag: string; text: string };
@@ -44,6 +54,7 @@ export type SiteContent = {
   resume: {
     title: string;
     experience: string;
+    hackathons: string;
     education: string;
     skills: string;
     /** Label for the PDF download link. */
@@ -52,6 +63,7 @@ export type SiteContent = {
     certs: string[];
   };
   jobs: Job[];
+  hackathons: Hackathon[];
   edu: Education[];
   skills: string[];
   projectsPage: {
@@ -177,6 +189,7 @@ export const content: SiteContent = {
   resume: {
     title: "Resume",
     experience: "EXPERIENCE",
+    hackathons: "HACKATHONS",
     education: "EDUCATION",
     skills: "SKILLS",
     download: "Download PDF",
@@ -196,18 +209,6 @@ export const content: SiteContent = {
       bullets: [
         "Maintaining the IT infrastructure of the campus",
         "Development of new services and web applications",
-      ],
-    },
-    // Kept below the current main job on purpose: the JSON-LD takes
-    // `jobs[0].role` as the job title.
-    {
-      period: "Oct 2026",
-      place: "Heilbronn",
-      role: "Mentor & Organiser",
-      org: "Green City Hackathon",
-      bullets: [
-        "Co-organising a three-day hackathon on using environmental data to make Heilbronn more sustainable and liveable",
-        "Mentoring teams building maps, dashboards and apps from temperature, particulate matter and urban greening data",
       ],
     },
     {
@@ -266,6 +267,19 @@ export const content: SiteContent = {
       role: "Student",
       org: "Bosch",
       bullets: ["Development of electrical systems", "Basic metalworking training"],
+    },
+  ],
+  hackathons: [
+    {
+      period: "Oct 2026",
+      place: "Heilbronn",
+      name: "Green City Hackathon",
+      role: "Mentor & Organiser",
+      url: "https://hackathon.greencity.hn/",
+      bullets: [
+        "Co-organising a three-day hackathon on using environmental data to make Heilbronn more sustainable and liveable",
+        "Mentoring teams building maps, dashboards and apps from temperature, particulate matter and urban greening data",
+      ],
     },
   ],
   edu: [
