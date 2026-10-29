@@ -198,6 +198,18 @@ export const content: SiteContent = {
         "Development of new services and web applications",
       ],
     },
+    // Kept below the current main job on purpose: the JSON-LD takes
+    // `jobs[0].role` as the job title.
+    {
+      period: "Oct 2026",
+      place: "Heilbronn",
+      role: "Mentor & Organiser",
+      org: "Green City Hackathon",
+      bullets: [
+        "Co-organising a three-day hackathon on using environmental data to make Heilbronn more sustainable and liveable",
+        "Mentoring teams building maps, dashboards and apps from temperature, particulate matter and urban greening data",
+      ],
+    },
     {
       period: "Feb 2024 — Sep 2024",
       place: "Heilbronn",

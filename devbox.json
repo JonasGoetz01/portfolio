@@ -2,7 +2,6 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.17.5/.schema/devbox.schema.json",
   "packages": [
     "bun@latest",
-    "git@latest",
     "gitmoji-cli@latest",
     "imagemagick@latest"
   ]
