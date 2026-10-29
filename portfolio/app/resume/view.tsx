@@ -46,6 +46,49 @@ export default function ResumeView() {
       </div>
 
       <h2 className="mb-5 mt-12 font-mono text-xs font-medium tracking-[0.06em] text-dim">
+        {content.resume.hackathons}
+      </h2>
+      <div className="border-t border-line">
+        {content.hackathons.map((event) => (
+          <div
+            key={`${event.name}-${event.period}`}
+            className="grid gap-6 border-b border-line py-5 sm:[grid-template-columns:180px_1fr]"
+          >
+            <div className="flex flex-col gap-1">
+              <span className="font-mono text-xs text-brand">{event.period}</span>
+              <span className="font-mono text-[11px] text-dim">{event.place}</span>
+            </div>
+            <div className="flex flex-col gap-[5px]">
+              <span className="text-base font-semibold tracking-[-0.01em]">
+                {event.url ? (
+                  <a
+                    href={event.url}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    className="transition-colors hover:text-brand"
+                  >
+                    {event.name} ↗
+                  </a>
+                ) : (
+                  event.name
+                )}
+              </span>
+              <span className="text-sm text-dim">{event.role}</span>
+              {event.bullets && (
+                <ul className="mt-[6px] flex list-disc flex-col gap-1 pl-4">
+                  {event.bullets.map((bullet) => (
+                    <li key={bullet} className="text-sm leading-[1.55]">
+                      {bullet}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <h2 className="mb-5 mt-12 font-mono text-xs font-medium tracking-[0.06em] text-dim">
         {content.resume.education}
       </h2>
       <div className="border-t border-line">

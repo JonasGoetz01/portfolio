@@ -8,6 +8,8 @@
  * and the type scale are kept in step with the design tokens by hand.
  */
 
+import { Children } from "react";
+
 import { Document, Page, StyleSheet, Text, View, renderToBuffer } from "@react-pdf/renderer";
 
 import { EMAIL, GITHUB, LINKEDIN, SITE_URL, content } from "@/lib/content";
@@ -73,10 +75,15 @@ const styles = StyleSheet.create({
 });
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
+  const [first, ...rest] = Children.toArray(children);
   return (
     <View>
-      <Text style={styles.sectionTitle}>{title}</Text>
-      {children}
+      {/* The heading travels with its first entry, so it is never left alone at a page's foot. */}
+      <View wrap={false}>
+        <Text style={styles.sectionTitle}>{title}</Text>
+        {first}
+      </View>
+      {rest}
     </View>
   );
 }
@@ -115,7 +122,7 @@ function Entry({
 }
 
 function ResumeDocument() {
-  const { resume, jobs, edu, skills, hero } = content;
+  const { resume, jobs, hackathons, edu, skills, hero } = content;
 
   return (
     <Document
@@ -144,6 +151,18 @@ function ResumeDocument() {
               title={job.role}
               org={job.org}
               bullets={job.bullets}
+            />
+          ))}
+        </Section>
+
+        <Section title={resume.hackathons.toUpperCase()}>
+          {hackathons.map((event) => (
+            <Entry
+              key={`${event.name}-${event.period}`}
+              when={`${event.period}\n${event.place}`}
+              title={event.name}
+              org={event.role}
+              bullets={event.bullets}
             />
           ))}
         </Section>
