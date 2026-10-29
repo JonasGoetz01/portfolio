@@ -12,6 +12,11 @@
 # history keeps the original either way). An .avif already newer than its source
 # is skipped, so re-running is cheap.
 #
+# The file written here is the file every visitor downloads: since Next 16.3.3
+# next/image serves AVIF sources as they are, without resizing them
+# (GHSA-2xp9-vwfh-vxw4). Scale a photo down to the size it is shown at before
+# dropping it in — Lighthouse holds each page to 500 KB in total.
+#
 # Requires ImageMagick 7 (`magick`), declared in devbox.json.
 
 set -euo pipefail
