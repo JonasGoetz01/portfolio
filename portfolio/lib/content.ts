@@ -54,6 +54,7 @@ export type SiteContent = {
   resume: {
     title: string;
     experience: string;
+    volunteering: string;
     hackathons: string;
     education: string;
     skills: string;
@@ -63,6 +64,8 @@ export type SiteContent = {
     certs: string[];
   };
   jobs: Job[];
+  /** Unpaid roles. Same shape as a job, listed apart so `jobs` stays employment only. */
+  volunteering: Job[];
   hackathons: Hackathon[];
   edu: Education[];
   skills: string[];
@@ -189,6 +192,7 @@ export const content: SiteContent = {
   resume: {
     title: "Resume",
     experience: "EXPERIENCE",
+    volunteering: "VOLUNTEERING",
     hackathons: "HACKATHONS",
     education: "EDUCATION",
     skills: "SKILLS",
@@ -267,6 +271,35 @@ export const content: SiteContent = {
       role: "Student",
       org: "Bosch",
       bullets: ["Development of electrical systems", "Basic metalworking training"],
+    },
+  ],
+  volunteering: [
+    {
+      period: "Oct 2026 — now",
+      place: "Buchen",
+      role: "Overall Leadership Team",
+      org: "Sommerlager Buchen",
+      bullets: [
+        "Jointly responsible for the whole camp, from planning through to the two weeks away",
+        "Planning Sommerlager 2027, 31 July to 14 August",
+      ],
+    },
+    {
+      period: "2025 — 2026",
+      place: "Buchen",
+      role: "Leadership Team",
+      org: "Sommerlager Buchen",
+      bullets: [
+        "Helping run a two-week camp for around 85 children aged seven to fourteen",
+        "Built the camp's registration site and management app",
+      ],
+    },
+    {
+      period: "2017 — 2019, 2024",
+      place: "Buchen",
+      role: "Camp Counsellor",
+      org: "Sommerlager Buchen",
+      bullets: ["Looking after children aged seven to fourteen through two weeks of camp"],
     },
   ],
   hackathons: [

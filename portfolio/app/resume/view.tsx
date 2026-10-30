@@ -1,5 +1,37 @@
 import PageIntro from "../_components/page-intro";
-import { content } from "@/lib/content";
+import { content, type Job } from "@/lib/content";
+
+/** Experience and volunteering share one layout: role, organisation, period, place. */
+function Roles({ items }: { items: Job[] }) {
+  return (
+    <div className="border-t border-line">
+      {items.map((job) => (
+        <div
+          key={`${job.org}-${job.role}-${job.period}`}
+          className="grid gap-6 border-b border-line py-[22px] sm:[grid-template-columns:180px_1fr]"
+        >
+          <div className="flex flex-col gap-1">
+            <span className="font-mono text-xs text-brand">{job.period}</span>
+            <span className="font-mono text-[11px] text-dim">{job.place}</span>
+          </div>
+          <div className="flex flex-col gap-[6px]">
+            <span className="text-[17px] font-semibold tracking-[-0.01em]">{job.role}</span>
+            <span className="text-sm text-dim">{job.org}</span>
+            {job.bullets && (
+              <ul className="mt-[6px] flex list-disc flex-col gap-1 pl-4">
+                {job.bullets.map((bullet) => (
+                  <li key={bullet} className="text-sm leading-[1.55]">
+                    {bullet}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 export default function ResumeView() {
   return (
@@ -18,32 +50,12 @@ export default function ResumeView() {
       <h2 className="mb-5 font-mono text-xs font-medium tracking-[0.06em] text-dim">
         {content.resume.experience}
       </h2>
-      <div className="border-t border-line">
-        {content.jobs.map((job) => (
-          <div
-            key={`${job.org}-${job.period}`}
-            className="grid gap-6 border-b border-line py-[22px] sm:[grid-template-columns:180px_1fr]"
-          >
-            <div className="flex flex-col gap-1">
-              <span className="font-mono text-xs text-brand">{job.period}</span>
-              <span className="font-mono text-[11px] text-dim">{job.place}</span>
-            </div>
-            <div className="flex flex-col gap-[6px]">
-              <span className="text-[17px] font-semibold tracking-[-0.01em]">{job.role}</span>
-              <span className="text-sm text-dim">{job.org}</span>
-              {job.bullets && (
-                <ul className="mt-[6px] flex list-disc flex-col gap-1 pl-4">
-                  {job.bullets.map((bullet) => (
-                    <li key={bullet} className="text-sm leading-[1.55]">
-                      {bullet}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+      <Roles items={content.jobs} />
+
+      <h2 className="mb-5 mt-12 font-mono text-xs font-medium tracking-[0.06em] text-dim">
+        {content.resume.volunteering}
+      </h2>
+      <Roles items={content.volunteering} />
 
       <h2 className="mb-5 mt-12 font-mono text-xs font-medium tracking-[0.06em] text-dim">
         {content.resume.hackathons}

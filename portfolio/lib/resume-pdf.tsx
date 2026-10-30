@@ -122,7 +122,7 @@ function Entry({
 }
 
 function ResumeDocument() {
-  const { resume, jobs, hackathons, edu, skills, hero } = content;
+  const { resume, jobs, volunteering, hackathons, edu, skills, hero } = content;
 
   return (
     <Document
@@ -151,6 +151,18 @@ function ResumeDocument() {
               title={job.role}
               org={job.org}
               bullets={job.bullets}
+            />
+          ))}
+        </Section>
+
+        <Section title={resume.volunteering.toUpperCase()}>
+          {volunteering.map((role) => (
+            <Entry
+              key={`${role.role}-${role.period}`}
+              when={`${role.period}\n${role.place}`}
+              title={role.role}
+              org={role.org}
+              bullets={role.bullets}
             />
           ))}
         </Section>
