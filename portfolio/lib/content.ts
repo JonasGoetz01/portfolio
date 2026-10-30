@@ -281,6 +281,24 @@ export const content: SiteContent = {
         "Mentoring teams building maps, dashboards and apps from temperature, particulate matter and urban greening data",
       ],
     },
+    {
+      period: "Oct 2025",
+      place: "Heilbronn",
+      name: "Improve Your Campus Life",
+      role: "Main Organiser & Jury Member",
+      bullets: [
+        "Leading the organisation of 42 Heilbronn's in-house hackathon, the campus-life track of Unlock Campus 2.0",
+        "Judging the teams' digital solutions for making everyday life on campus better",
+      ],
+    },
+    {
+      period: "Sep 2024",
+      place: "Kraków",
+      name: "HackYeah",
+      role: "Participant",
+      url: "https://hackyeah.pl/",
+      bullets: ["24-hour hackathon at TAURON Arena Kraków, Europe's largest stationary hackathon"],
+    },
   ],
   edu: [
     {
